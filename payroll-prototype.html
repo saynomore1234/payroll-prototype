@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Management System - Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Make login screen visible by default */
+        #login {
+            display: block;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .dashboard-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .dashboard-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card p {
+            color: #6c757d;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .error-row {
+            background: #ffebee !important;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .filters {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+
+        .filters .form-group {
+            margin-bottom: 0;
+        }
+
+        .error-banner {
+            background: #ffebee;
+            border: 1px solid #e74c3c;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .payslip-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .payslip-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .salary-breakdown {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .salary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .salary-item.total {
+            font-weight: bold;
+            border-top: 2px solid #2c3e50;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: #3498db;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 28px;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">Payroll Management System</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showScreen('login')">Logout</button>
+            </div>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="login" class="screen active">
+            <div class="login-form">
+                <h2>Login</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard" class="screen">
+            <h2>Dashboard</h2>
+            <p>Welcome to the Payroll Management System</p>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="showScreen('payroll-runs')">
+                    <h3>Payroll Runs</h3>
+                    <p>Manage and review payroll runs</p>
+                </div>
+                <div class="dashboard-card" onclick="showScreen('payslip')">
+                    <h3>Payslips</h3>
+                    <p>View employee payslips</p>
+                </div>
+                <div class="dashboard-card" onclick="showScreen('settings')">
+                    <h3>Settings</h3>
+                    <p>Configure system settings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payroll Runs Screen -->
+        <div id="payroll-runs" class="screen">
+            <div class="back-btn">
+                <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            </div>
+            <h2>Payroll Runs</h2>
+            
+            <div class="filters">
+                <div class="form-group">
+                    <label for="period-filter">Period:</label>
+                    <select id="period-filter">
+                        <option value="">All Periods</option>
+                        <option value="2024-01">January 2024</option>
+                        <option value="2024-02">February 2024</option>
+                        <option value="2024-03">March 2024</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status-filter">Status:</label>
+                    <select id="status-filter">
+                        <option value="">All Statuses</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="error">Error</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="filterRuns()">Filter</button>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Period</th>
+                        <th>Status</th>
+                        <th>Employees</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RUN-001</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td>25</td>
+                        <td>$125,000</td>
+                        <td><button class="btn btn-primary" onclick="showScreen('run-details')">View Details</button></td>
+                    </tr>
+                    <tr>
+                        <td>RUN-002</td>
+                        <td>February 2024</td>
+                        <td><span class="status-badge status-completed">Completed</span></td>
+                        <td>24</td>
+                        <td>$120,000</td>
+                        <td><button class="btn btn-primary" onclick="showScreen('run-details')">View Details</button></td>
+                    </tr>
+                    <tr>
+                        <td>RUN-003</td>
+                        <td>January 2024</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>23</td>
+                        <td>$115,000</td>
+                        <td><button class="btn btn-primary" onclick="showScreen('run-details')">View Details</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Run Details Screen -->
+        <div id="run-details" class="screen">
+            <div class="back-btn">
+                <button class="btn btn-secondary" onclick="showScreen('payroll-runs')">← Back to Payroll Runs</button>
+            </div>
+            <h2>Run Details - RUN-001</h2>
+            <p><strong>Period:</strong> March 2024 | <strong>Status:</strong> <span class="status-badge status-error">Error</span> | <strong>Total Employees:</strong> 25</p>
+            
+            <div class="error-banner">
+                ⚠️ 3 records need review before processing
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-warning" onclick="autoFix()">Auto-fix Errors</button>
+                <button class="btn btn-success" onclick="exportReport()">Export Report</button>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Hours Worked</th>
+                        <th>Gross Pay</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="error-row">
+                        <td>EMP-001</td>
+                        <td>John Smith</td>
+                        <td>Engineering</td>
+                        <td>45</td>
+                        <td>$4,500</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-002</td>
+                        <td>Jane Doe</td>
+                        <td>Marketing</td>
+                        <td>40</td>
+                        <td>$3,200</td>
+                        <td><span class="status-badge status-completed">OK</span></td>
+                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                    </tr>
+                    <tr class="error-row">
+                        <td>EMP-003</td>
+                        <td>Mike Johnson</td>
+                        <td>Sales</td>
+                        <td>50</td>
+                        <td>$5,000</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-004</td>
+                        <td>Sarah Wilson</td>
+                        <td>HR</td>
+                        <td>40</td>
+                        <td>$3,800</td>
+                        <td><span class="status-badge status-completed">OK</span></td>
+                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                    </tr>
+                    <tr class="error-row">
+                        <td>EMP-005</td>
+                        <td>David Brown</td>
+                        <td>Finance</td>
+                        <td>42</td>
+                        <td>$4,200</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Payslip Screen -->
+        <div id="payslip" class="screen">
+            <div class="back-btn">
+                <button class="btn btn-secondary" onclick="showScreen('run-details')">← Back to Run Details</button>
+            </div>
+            
+            <div class="payslip-header">
+                <h2>Employee Payslip</h2>
+                <p><strong>Employee:</strong> John Smith (EMP-001)</p>
+                <p><strong>Period:</strong> March 2024</p>
+                <p><strong>Department:</strong> Engineering</p>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
+                    <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
+                    <button class="btn btn-secondary" onclick="emailPayslip()">📧 Email Payslip</button>
+                </div>
+            </div>
+
+            <div class="payslip-details">
+                <div>
+                    <h3>Employee Information</h3>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <p><strong>Employee ID:</strong> EMP-001</p>
+                        <p><strong>Name:</strong> John Smith</p>
+                        <p><strong>Position:</strong> Senior Developer</p>
+                        <p><strong>Department:</strong> Engineering</p>
+                        <p><strong>Hire Date:</strong> January 15, 2022</p>
+                        <p><strong>Pay Grade:</strong> P4</p>
+                    </div>
+                    
+                    <h3>Pay Period Details</h3>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <p><strong>Pay Period:</strong> March 1-31, 2024</p>
+                        <p><strong>Pay Date:</strong> April 5, 2024</p>
+                        <p><strong>Pay Frequency:</strong> Monthly</p>
+                        <p><strong>Hours Worked:</strong> 45 hours</p>
+                        <p><strong>Regular Hours:</strong> 40 hours</p>
+                        <p><strong>Overtime Hours:</strong> 5 hours</p>
+                    </div>
+                </div>
+                
+                <div class="salary-breakdown">
+                    <h3>Earnings</h3>
+                    <div class="salary-item">
+                        <span>Base Salary:</span>
+                        <span>$4,000.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Overtime (5 hrs @ $50):</span>
+                        <span>$250.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Performance Bonus:</span>
+                        <span>$250.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Project Incentive:</span>
+                        <span>$100.00</span>
+                    </div>
+                    <div class="salary-item total" style="border-top: 2px solid #27ae60; margin-top: 10px;">
+                        <span><strong>Total Gross Pay:</strong></span>
+                        <span><strong>$4,600.00</strong></span>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">Deductions</h3>
+                    <div class="salary-item">
+                        <span>Federal Income Tax (22%):</span>
+                        <span>-$1,012.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>State Income Tax (5%):</span>
+                        <span>-$230.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Social Security (6.2%):</span>
+                        <span>-$285.20</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Medicare (1.45%):</span>
+                        <span>-$66.70</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Health Insurance:</span>
+                        <span>-$150.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Dental Insurance:</span>
+                        <span>-$25.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>401(k) Contribution (5%):</span>
+                        <span>-$230.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Life Insurance:</span>
+                        <span>-$15.00</span>
+                    </div>
+                    <div class="salary-item total" style="border-top: 2px solid #e74c3c; margin-top: 10px;">
+                        <span><strong>Total Deductions:</strong></span>
+                        <span><strong>-$2,013.90</strong></span>
+                    </div>
+                    
+                    <div class="salary-item total" style="border-top: 3px solid #2c3e50; margin-top: 20px; font-size: 18px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                        <span><strong>NET PAY:</strong></span>
+                        <span><strong>$2,586.10</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Payslip Information -->
+            <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3>Year-to-Date Summary</h3>
+                    <div class="salary-item">
+                        <span>Gross Pay YTD:</span>
+                        <span>$13,800.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Taxes Paid YTD:</span>
+                        <span>$4,041.70</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Net Pay YTD:</span>
+                        <span>$7,758.30</span>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <h3>Payment Information</h3>
+                    <p><strong>Payment Method:</strong> Direct Deposit</p>
+                    <p><strong>Bank:</strong> Chase Bank</p>
+                    <p><strong>Account:</strong> ****1234</p>
+                    <p><strong>Routing:</strong> 021000021</p>
+                    <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                </div>
+            </div>
+
+            <!-- Payslip Footer -->
+            <div style="margin-top: 30px; padding: 20px; background: #2c3e50; color: white; border-radius: 8px; text-align: center;">
+                <p><strong>This is a computer-generated payslip. No signature required.</strong></p>
+                <p>For questions about this payslip, contact HR at hr@company.com or call (555) 123-4567</p>
+                <p>Payslip generated on: April 5, 2024 at 9:30 AM</p>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settings" class="screen">
+            <div class="back-btn">
+                <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            </div>
+            <h2>Settings</h2>
+            
+            <div class="settings-section">
+                <h3>Error Handling</h3>
+                <div class="toggle">
+                    <div>
+                        <strong>Auto-highlight errors</strong>
+                        <p>Automatically highlight records with errors in payroll runs</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="toggle">
+                    <div>
+                        <strong>Auto-fix common errors</strong>
+                        <p>Automatically attempt to fix common payroll calculation errors</p>
+                    </div>
+                    <div class="toggle-switch" onclick="toggleSwitch(this)"></div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Thresholds</h3>
+                <div class="form-group">
+                    <label for="overtime-threshold">Overtime Threshold (hours):</label>
+                    <input type="number" id="overtime-threshold" value="40" min="0" max="60">
+                </div>
+                <div class="form-group">
+                    <label for="max-hours">Maximum Hours per Pay Period:</label>
+                    <input type="number" id="max-hours" value="80" min="0" max="200">
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Notifications</h3>
+                <div class="toggle">
+                    <div>
+                        <strong>Email notifications</strong>
+                        <p>Send email notifications for payroll run completions</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                </div>
+                <div class="toggle">
+                    <div>
+                        <strong>Error alerts</strong>
+                        <p>Get immediate alerts when errors occur in payroll processing</p>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <button class="btn btn-success" onclick="saveSettings()">Save Settings</button>
+                <button class="btn btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Screen navigation
+        function showScreen(screenId) {
+            console.log('Navigating to screen:', screenId);
+            
+            // Hide all screens
+            const screens = document.querySelectorAll('.screen');
+            console.log('Found', screens.length, 'screens');
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+                screen.style.display = 'none';
+            });
+            
+            // Show selected screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                targetScreen.style.display = 'block';
+                console.log('Successfully showed screen:', screenId);
+            } else {
+                console.error('Screen not found:', screenId);
+                alert('Screen not found: ' + screenId);
+            }
+        }
+
+        // Login handling
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation (in real app, this would be server-side)
+            if (email && password) {
+                showScreen('dashboard');
+            } else {
+                alert('Please enter both email and password');
+            }
+        }
+
+        // Filter functionality
+        function filterRuns() {
+            const periodFilter = document.getElementById('period-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            // In a real app, this would make an API call
+            console.log('Filtering by period:', periodFilter, 'status:', statusFilter);
+            alert('Filter applied (this is a prototype)');
+        }
+
+        // Auto-fix functionality
+        function autoFix() {
+            if (confirm('This will attempt to automatically fix the highlighted errors. Continue?')) {
+                // In a real app, this would make an API call
+                alert('Auto-fix completed! 2 out of 3 errors were resolved.');
+                
+                // Update the UI to show fewer errors
+                const errorRows = document.querySelectorAll('.error-row');
+                if (errorRows.length > 0) {
+                    errorRows[0].classList.remove('error-row');
+                    errorRows[0].querySelector('.status-badge').textContent = 'OK';
+                    errorRows[0].querySelector('.status-badge').className = 'status-badge status-completed';
+                }
+            }
+        }
+
+        // Export report functionality
+        function exportReport() {
+            alert('Exporting payroll report... (This is a prototype)');
+        }
+
+        // Toggle switch functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        // Settings functions
+        function saveSettings() {
+            alert('Settings saved successfully!');
+        }
+
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to defaults?')) {
+                // Reset toggles
+                const toggles = document.querySelectorAll('.toggle-switch');
+                toggles.forEach(toggle => {
+                    if (toggle.parentElement.querySelector('strong').textContent.includes('Auto-highlight errors') ||
+                        toggle.parentElement.querySelector('strong').textContent.includes('Email notifications') ||
+                        toggle.parentElement.querySelector('strong').textContent.includes('Error alerts')) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+                });
+                
+                // Reset form fields
+                document.getElementById('overtime-threshold').value = 40;
+                document.getElementById('max-hours').value = 80;
+                
+                alert('Settings reset to defaults');
+            }
+        }
+
+        // Payslip functions
+        function printPayslip() {
+            if (confirm('This will open the payslip in a new window for printing. Continue?')) {
+                const payslipContent = document.getElementById('payslip').innerHTML;
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Payslip - John Smith</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; margin: 20px; }
+                                .screen { display: block !important; }
+                                .back-btn { display: none; }
+                                .btn { display: none; }
+                                .header { display: none; }
+                                @media print {
+                                    body { margin: 0; }
+                                }
+                            </style>
+                        </head>
+                        <body>${payslipContent}</body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.focus();
+                printWindow.print();
+            }
+        }
+
+        function downloadPayslip() {
+            alert('Downloading payslip as PDF... (This is a prototype - in a real app, this would generate a PDF)');
+        }
+
+        function emailPayslip() {
+            const email = prompt('Enter employee email address:', 'john.smith@company.com');
+            if (email) {
+                alert(`Payslip sent to ${email} successfully!`);
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            showScreen('login');
+        });
+    </script>
+</body>
+</html>
