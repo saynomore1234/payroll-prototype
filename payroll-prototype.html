@@ -358,7 +358,15 @@
                         <label for="password">Password:</label>
                         <input type="password" id="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; font-weight: normal;">
+                            <input type="checkbox" style="margin-right: 8px;"> Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Login</button>
+                    <div style="text-align: center;">
+                        <a href="#" onclick="alert('Forgot password feature would be implemented here')" style="color: #3498db; text-decoration: none;">Forgot Password?</a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -366,7 +374,7 @@
         <!-- Dashboard Screen -->
         <div id="dashboard" class="screen">
             <h2>Dashboard</h2>
-            <p>Welcome to the Payroll Management System</p>
+            <p>Welcome back! Here's an overview of your payroll management system.</p>
             
             <div class="dashboard-grid">
                 <div class="dashboard-card" onclick="showScreen('payroll-runs')">
@@ -790,9 +798,9 @@
 
         // Auto-fix functionality
         function autoFix() {
-            if (confirm('This will attempt to automatically fix the highlighted errors. Continue?')) {
+            if (confirm('This will attempt to automatically fix the highlighted errors. This action will:\n\n• Fix overtime calculation errors\n• Correct tax withholding issues\n• Resolve missing employee data\n\nContinue with auto-fix?')) {
                 // In a real app, this would make an API call
-                alert('Auto-fix completed! 2 out of 3 errors were resolved.');
+                alert('Auto-fix completed! 2 out of 3 errors were resolved.\n\nFixed issues:\n• Overtime calculation for EMP-001\n• Tax withholding for EMP-003\n\nRemaining issue: EMP-005 requires manual review');
                 
                 // Update the UI to show fewer errors
                 const errorRows = document.querySelectorAll('.error-row');
@@ -820,7 +828,7 @@
         }
 
         function resetSettings() {
-            if (confirm('Are you sure you want to reset all settings to defaults?')) {
+            if (confirm('Are you sure you want to reset all settings to defaults?\n\nThis will:\n• Turn off auto-highlight errors\n• Reset overtime threshold to 40 hours\n• Reset max hours to 80\n• Turn off email notifications\n\nThis action cannot be undone.')) {
                 // Reset toggles
                 const toggles = document.querySelectorAll('.toggle-switch');
                 toggles.forEach(toggle => {
