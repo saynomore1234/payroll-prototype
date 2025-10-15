@@ -543,7 +543,105 @@
         <!-- Payslip Screen -->
         <div id="payslip" class="screen">
             <div class="back-btn">
-                <button class="btn btn-secondary" onclick="showScreen('run-details')">← Back to Run Details</button>
+                <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            </div>
+            
+            <h2>Employee Payslips</h2>
+            <p>Select an employee to view their payslip details</p>
+            
+            <div class="filters" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label for="employee-search">Search Employee:</label>
+                    <input type="text" id="employee-search" placeholder="Search by name or ID..." onkeyup="filterEmployees()">
+                </div>
+                <div class="form-group">
+                    <label for="department-filter">Department:</label>
+                    <select id="department-filter" onchange="filterEmployees()">
+                        <option value="">All Departments</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="HR">HR</option>
+                        <option value="Finance">Finance</option>
+                    </select>
+                </div>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Position</th>
+                        <th>Last Pay Period</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-list">
+                    <tr>
+                        <td>EMP-001</td>
+                        <td>John Smith</td>
+                        <td>Engineering</td>
+                        <td>Senior Developer</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-001', 'John Smith')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-002</td>
+                        <td>Jane Doe</td>
+                        <td>Marketing</td>
+                        <td>Marketing Manager</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-completed">Complete</span></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-002', 'Jane Doe')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-003</td>
+                        <td>Mike Johnson</td>
+                        <td>Sales</td>
+                        <td>Sales Representative</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-003', 'Mike Johnson')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-004</td>
+                        <td>Sarah Wilson</td>
+                        <td>HR</td>
+                        <td>HR Specialist</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-completed">Complete</span></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-004', 'Sarah Wilson')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-005</td>
+                        <td>David Brown</td>
+                        <td>Finance</td>
+                        <td>Financial Analyst</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-error">Error</span></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-005', 'David Brown')">View Payslip</button></td>
+                    </tr>
+                    <tr>
+                        <td>EMP-006</td>
+                        <td>Lisa Garcia</td>
+                        <td>Engineering</td>
+                        <td>Frontend Developer</td>
+                        <td>March 2024</td>
+                        <td><span class="status-badge status-completed">Complete</span></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-006', 'Lisa Garcia')">View Payslip</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Individual Employee Payslip Screen -->
+        <div id="employee-payslip" class="screen">
+            <div class="back-btn">
+                <button class="btn btn-secondary" onclick="showScreen('payslip')">← Back to Employee List</button>
             </div>
             
             <div class="payslip-header">
@@ -849,15 +947,70 @@
             }
         }
 
+        // Employee list filtering
+        function filterEmployees() {
+            const searchTerm = document.getElementById('employee-search').value.toLowerCase();
+            const departmentFilter = document.getElementById('department-filter').value;
+            const rows = document.querySelectorAll('#employee-list tr');
+            
+            rows.forEach(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                const department = row.cells[2].textContent;
+                const id = row.cells[0].textContent.toLowerCase();
+                
+                const matchesSearch = name.includes(searchTerm) || id.includes(searchTerm);
+                const matchesDepartment = !departmentFilter || department === departmentFilter;
+                
+                if (matchesSearch && matchesDepartment) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // View individual employee payslip
+        function viewEmployeePayslip(employeeId, employeeName) {
+            // Update the payslip header with selected employee info
+            const payslipHeader = document.querySelector('#employee-payslip .payslip-header');
+            payslipHeader.innerHTML = `
+                <h2>Employee Payslip</h2>
+                <p><strong>Employee:</strong> ${employeeName} (${employeeId})</p>
+                <p><strong>Period:</strong> March 2024</p>
+                <p><strong>Department:</strong> ${getEmployeeDepartment(employeeId)}</p>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
+                    <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
+                    <button class="btn btn-secondary" onclick="emailPayslip()">📧 Email Payslip</button>
+                </div>
+            `;
+            
+            // Show the individual payslip screen
+            showScreen('employee-payslip');
+        }
+
+        // Helper function to get employee department
+        function getEmployeeDepartment(employeeId) {
+            const departments = {
+                'EMP-001': 'Engineering',
+                'EMP-002': 'Marketing', 
+                'EMP-003': 'Sales',
+                'EMP-004': 'HR',
+                'EMP-005': 'Finance',
+                'EMP-006': 'Engineering'
+            };
+            return departments[employeeId] || 'Unknown';
+        }
+
         // Payslip functions
         function printPayslip() {
             if (confirm('This will open the payslip in a new window for printing. Continue?')) {
-                const payslipContent = document.getElementById('payslip').innerHTML;
+                const payslipContent = document.getElementById('employee-payslip').innerHTML;
                 const printWindow = window.open('', '_blank');
                 printWindow.document.write(`
                     <html>
                         <head>
-                            <title>Payslip - John Smith</title>
+                            <title>Payslip - ${document.querySelector('#employee-payslip .payslip-header p').textContent}</title>
                             <style>
                                 body { font-family: Arial, sans-serif; margin: 20px; }
                                 .screen { display: block !important; }
@@ -883,7 +1036,8 @@
         }
 
         function emailPayslip() {
-            const email = prompt('Enter employee email address:', 'john.smith@company.com');
+            const employeeName = document.querySelector('#employee-payslip .payslip-header p').textContent.split('(')[0].split(':')[1].trim();
+            const email = prompt('Enter employee email address:', `${employeeName.toLowerCase().replace(' ', '.')}@company.com`);
             if (email) {
                 alert(`Payslip sent to ${email} successfully!`);
             }
