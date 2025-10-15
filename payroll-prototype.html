@@ -340,8 +340,8 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">Payroll Management System</div>
-            <div class="nav-buttons">
-                <button class="btn btn-secondary" onclick="showScreen('login')">Logout</button>
+            <div class="nav-buttons" id="header-buttons" style="display: none;">
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
 
@@ -868,6 +868,14 @@
                 console.error('Screen not found:', screenId);
                 alert('Screen not found: ' + screenId);
             }
+            
+            // Show/hide logout button based on current screen
+            const headerButtons = document.getElementById('header-buttons');
+            if (screenId === 'login') {
+                headerButtons.style.display = 'none';
+            } else {
+                headerButtons.style.display = 'flex';
+            }
         }
 
         // Login handling
@@ -881,6 +889,18 @@
                 showScreen('dashboard');
             } else {
                 alert('Please enter both email and password');
+            }
+        }
+
+        // Logout handling
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any form data
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                
+                // Return to login screen
+                showScreen('login');
             }
         }
 
