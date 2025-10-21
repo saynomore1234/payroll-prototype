@@ -108,8 +108,22 @@
 
         .content {
             flex: 1;
-            padding: 24px;
-            background: #f8fafc;
+            padding: 32px;
+            background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+            position: relative;
+        }
+
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(49, 130, 206, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(56, 161, 105, 0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .content-header {
@@ -315,22 +329,31 @@
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 24px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
         }
 
         .table th, .table td {
-            padding: 12px;
+            padding: 16px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .table th {
-            background: #f8f9fa;
-            font-weight: bold;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .table tr:hover {
-            background: #f5f5f5;
+        .table tbody tr:hover {
+            background: #f8fafc;
         }
 
         .error-row {
@@ -483,8 +506,8 @@
                     <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #3182ce 0%, #38a169 100%); border-radius: 20px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(49, 130, 206, 0.3);">
                         <span style="font-size: 36px; color: white;">🏢</span>
                     </div>
-                    <h1 style="font-size: 36px; font-weight: 800; color: #1a202c; margin: 0 0 12px 0; letter-spacing: -0.5px;">Welcome Back</h1>
-                    <p style="color: #718096; font-size: 18px; margin: 0; font-weight: 400;">Sign in to MotoPH Payroll Management System</p>
+                    <h1 style="font-size: 36px; font-weight: 800; color: #1a202c; margin: 0 0 12px 0; letter-spacing: -0.5px;">Sign In</h1>
+                    <p style="color: #718096; font-size: 18px; margin: 0; font-weight: 400;">Access MotoPH Payroll Management System</p>
                 </div>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
@@ -550,7 +573,7 @@
             <div class="filters">
                 <div class="form-group">
                     <label for="period-filter">Period:</label>
-                    <select id="period-filter">
+                    <select id="period-filter" onchange="filterPayrollRuns()">
                         <option value="">All Periods</option>
                         <option value="2024-01">January 2024</option>
                         <option value="2024-02">February 2024</option>
@@ -559,7 +582,7 @@
                 </div>
                 <div class="form-group">
                     <label for="status-filter">Status:</label>
-                    <select id="status-filter">
+                    <select id="status-filter" onchange="filterPayrollRuns()">
                         <option value="">All Statuses</option>
                         <option value="completed">Completed</option>
                         <option value="pending">Pending</option>
@@ -742,7 +765,10 @@
                         <td>Senior Developer</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-001', 'John Smith', 'Engineering', 'Senior Developer')">View Payslip</button></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-001', 'John Smith', 'Engineering', 'Senior Developer')">View Payslip</button>
+                            <button class="btn btn-warning" onclick="fixEmployeeError('EMP-001', 'John Smith')" style="margin-left: 8px; padding: 8px 16px; font-size: 12px;">🔧 Fix Error</button>
+                        </td>
                     </tr>
                     <tr>
                         <td>EMP-002</td>
@@ -760,7 +786,10 @@
                         <td>Sales Representative</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-003', 'Mike Johnson', 'Sales', 'Sales Representative')">View Payslip</button></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-003', 'Mike Johnson', 'Sales', 'Sales Representative')">View Payslip</button>
+                            <button class="btn btn-warning" onclick="fixEmployeeError('EMP-003', 'Mike Johnson')" style="margin-left: 8px; padding: 8px 16px; font-size: 12px;">🔧 Fix Error</button>
+                        </td>
                     </tr>
                     <tr>
                         <td>EMP-004</td>
@@ -778,7 +807,10 @@
                         <td>Financial Analyst</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-005', 'David Brown', 'Finance', 'Financial Analyst')">View Payslip</button></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-005', 'David Brown', 'Finance', 'Financial Analyst')">View Payslip</button>
+                            <button class="btn btn-warning" onclick="fixEmployeeError('EMP-005', 'David Brown')" style="margin-left: 8px; padding: 8px 16px; font-size: 12px;">🔧 Fix Error</button>
+                        </td>
                     </tr>
                     <tr>
                         <td>EMP-006</td>
@@ -1183,6 +1215,9 @@
 
         // View individual employee payslip
         function viewEmployeePayslip(employeeId, employeeName, department, position) {
+            // Get employee-specific data
+            const employeeData = getEmployeeData(employeeId);
+            
             // Update the payslip header with selected employee info
             const payslipHeader = document.querySelector('#employee-payslip .payslip-header');
             payslipHeader.innerHTML = `
@@ -1191,6 +1226,11 @@
                 <p><strong>Period:</strong> March 2024</p>
                 <p><strong>Department:</strong> ${department}</p>
                 <p><strong>Position:</strong> ${position}</p>
+                ${employeeData.hasError ? `
+                    <div style="margin-top: 15px; padding: 12px; background: #fed7d7; border: 1px solid #fc8181; border-radius: 8px; color: #c53030;">
+                        <strong>⚠️ Error Details:</strong> ${employeeData.errorMessage}
+                    </div>
+                ` : ''}
                 <div style="margin-top: 15px;">
                     <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
                     <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
@@ -1207,8 +1247,9 @@
                     <p><strong>Name:</strong> ${employeeName}</p>
                     <p><strong>Position:</strong> ${position}</p>
                     <p><strong>Department:</strong> ${department}</p>
-                    <p><strong>Hire Date:</strong> January 15, 2022</p>
-                    <p><strong>Pay Grade:</strong> P4</p>
+                    <p><strong>Hire Date:</strong> ${employeeData.hireDate}</p>
+                    <p><strong>Pay Grade:</strong> ${employeeData.payGrade}</p>
+                    <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
                 </div>
                 
                 <h3>Pay Period Details</h3>
@@ -1216,11 +1257,14 @@
                     <p><strong>Pay Period:</strong> March 1-31, 2024</p>
                     <p><strong>Pay Date:</strong> April 5, 2024</p>
                     <p><strong>Pay Frequency:</strong> Monthly</p>
-                    <p><strong>Hours Worked:</strong> 45 hours</p>
-                    <p><strong>Regular Hours:</strong> 40 hours</p>
-                    <p><strong>Overtime Hours:</strong> 5 hours</p>
+                    <p><strong>Hours Worked:</strong> ${employeeData.hoursWorked} hours</p>
+                    <p><strong>Regular Hours:</strong> ${employeeData.regularHours} hours</p>
+                    <p><strong>Overtime Hours:</strong> ${employeeData.overtimeHours} hours</p>
                 </div>
             `;
+            
+            // Update salary breakdown
+            updateSalaryBreakdown(employeeData);
             
             // Show the individual payslip screen
             showScreen('employee-payslip');
@@ -1237,6 +1281,281 @@
                 'EMP-006': 'Engineering'
             };
             return departments[employeeId] || 'Unknown';
+        }
+
+        // Get comprehensive employee data
+        function getEmployeeData(employeeId) {
+            const employeeData = {
+                'EMP-001': {
+                    basicSalary: 45000,
+                    overtimeHours: 5,
+                    performanceBonus: 5000,
+                    projectIncentive: 3000,
+                    thirteenthMonth: 3750,
+                    sss: 1800,
+                    philhealth: 1350,
+                    pagibig: 900,
+                    withholdingTax: 6750,
+                    healthInsurance: 1200,
+                    lifeInsurance: 500,
+                    loanDeduction: 2000,
+                    hireDate: 'January 15, 2022',
+                    payGrade: 'P5',
+                    paymentMethod: 'Bank Transfer - BDO',
+                    hoursWorked: 45,
+                    regularHours: 40,
+                    overtimeHours: 5,
+                    hasError: true,
+                    errorMessage: 'Overtime calculation mismatch - hours exceed maximum allowed'
+                },
+                'EMP-002': {
+                    basicSalary: 38000,
+                    overtimeHours: 0,
+                    performanceBonus: 2000,
+                    projectIncentive: 0,
+                    thirteenthMonth: 3167,
+                    sss: 1520,
+                    philhealth: 1140,
+                    pagibig: 760,
+                    withholdingTax: 4560,
+                    healthInsurance: 1000,
+                    lifeInsurance: 400,
+                    loanDeduction: 0,
+                    hireDate: 'March 10, 2022',
+                    payGrade: 'P4',
+                    paymentMethod: 'Bank Transfer - Metrobank',
+                    hoursWorked: 40,
+                    regularHours: 40,
+                    overtimeHours: 0,
+                    hasError: false,
+                    errorMessage: ''
+                },
+                'EMP-003': {
+                    basicSalary: 32000,
+                    overtimeHours: 10,
+                    performanceBonus: 1500,
+                    projectIncentive: 2000,
+                    thirteenthMonth: 2667,
+                    sss: 1280,
+                    philhealth: 960,
+                    pagibig: 640,
+                    withholdingTax: 3840,
+                    healthInsurance: 800,
+                    lifeInsurance: 300,
+                    loanDeduction: 1500,
+                    hireDate: 'June 1, 2022',
+                    payGrade: 'P3',
+                    paymentMethod: 'Cash - Office Pickup',
+                    hoursWorked: 50,
+                    regularHours: 40,
+                    overtimeHours: 10,
+                    hasError: true,
+                    errorMessage: 'Commission calculation error - missing sales data'
+                },
+                'EMP-004': {
+                    basicSalary: 35000,
+                    overtimeHours: 0,
+                    performanceBonus: 1000,
+                    projectIncentive: 0,
+                    thirteenthMonth: 2917,
+                    sss: 1400,
+                    philhealth: 1050,
+                    pagibig: 700,
+                    withholdingTax: 4200,
+                    healthInsurance: 900,
+                    lifeInsurance: 350,
+                    loanDeduction: 0,
+                    hireDate: 'August 20, 2021',
+                    payGrade: 'P4',
+                    paymentMethod: 'Bank Transfer - BPI',
+                    hoursWorked: 40,
+                    regularHours: 40,
+                    overtimeHours: 0,
+                    hasError: false,
+                    errorMessage: ''
+                },
+                'EMP-005': {
+                    basicSalary: 42000,
+                    overtimeHours: 2,
+                    performanceBonus: 3000,
+                    projectIncentive: 1000,
+                    thirteenthMonth: 3500,
+                    sss: 1680,
+                    philhealth: 1260,
+                    pagibig: 840,
+                    withholdingTax: 5040,
+                    healthInsurance: 1100,
+                    lifeInsurance: 450,
+                    loanDeduction: 3000,
+                    hireDate: 'February 14, 2022',
+                    payGrade: 'P5',
+                    paymentMethod: 'Bank Transfer - Security Bank',
+                    hoursWorked: 42,
+                    regularHours: 40,
+                    overtimeHours: 2,
+                    hasError: true,
+                    errorMessage: 'Tax computation error - incorrect BIR bracket applied'
+                },
+                'EMP-006': {
+                    basicSalary: 40000,
+                    overtimeHours: 0,
+                    performanceBonus: 2500,
+                    projectIncentive: 1500,
+                    thirteenthMonth: 3333,
+                    sss: 1600,
+                    philhealth: 1200,
+                    pagibig: 800,
+                    withholdingTax: 4800,
+                    healthInsurance: 1000,
+                    lifeInsurance: 400,
+                    loanDeduction: 0,
+                    hireDate: 'November 5, 2021',
+                    payGrade: 'P4',
+                    paymentMethod: 'Bank Transfer - UnionBank',
+                    hoursWorked: 40,
+                    regularHours: 40,
+                    overtimeHours: 0,
+                    hasError: false,
+                    errorMessage: ''
+                }
+            };
+            return employeeData[employeeId] || employeeData['EMP-001'];
+        }
+
+        // Update salary breakdown based on employee data
+        function updateSalaryBreakdown(employeeData) {
+            const overtimeRate = employeeData.basicSalary / 8 * 1.25;
+            const overtimePay = employeeData.overtimeHours * overtimeRate;
+            const grossPay = employeeData.basicSalary + overtimePay + employeeData.performanceBonus + employeeData.projectIncentive + employeeData.thirteenthMonth;
+            const totalDeductions = employeeData.sss + employeeData.philhealth + employeeData.pagibig + employeeData.withholdingTax + employeeData.healthInsurance + employeeData.lifeInsurance + employeeData.loanDeduction;
+            const netPay = grossPay - totalDeductions;
+
+            const salaryBreakdown = document.querySelector('#employee-payslip .salary-breakdown');
+            salaryBreakdown.innerHTML = `
+                <h3>Earnings</h3>
+                <div class="salary-item">
+                    <span>Basic Salary:</span>
+                    <span>₱${employeeData.basicSalary.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>Overtime (${employeeData.overtimeHours} hrs @ ₱${overtimeRate.toFixed(2)}):</span>
+                    <span>₱${overtimePay.toFixed(2)}</span>
+                </div>
+                <div class="salary-item">
+                    <span>Performance Bonus:</span>
+                    <span>₱${employeeData.performanceBonus.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>Project Incentive:</span>
+                    <span>₱${employeeData.projectIncentive.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>13th Month Pay:</span>
+                    <span>₱${employeeData.thirteenthMonth.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item total">
+                    <span><strong>Total Gross Pay:</strong></span>
+                    <span><strong>₱${grossPay.toLocaleString()}.00</strong></span>
+                </div>
+
+                <h3>Government Mandatory Contributions</h3>
+                <div class="salary-item">
+                    <span>SSS:</span>
+                    <span>₱${employeeData.sss.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>PhilHealth:</span>
+                    <span>₱${employeeData.philhealth.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>Pag-IBIG:</span>
+                    <span>₱${employeeData.pagibig.toLocaleString()}.00</span>
+                </div>
+
+                <h3>Tax Deductions</h3>
+                <div class="salary-item">
+                    <span>Withholding Tax (BIR):</span>
+                    <span>₱${employeeData.withholdingTax.toLocaleString()}.00</span>
+                </div>
+
+                <h3>Other Deductions</h3>
+                <div class="salary-item">
+                    <span>Health Insurance (HMO):</span>
+                    <span>₱${employeeData.healthInsurance.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>Life Insurance:</span>
+                    <span>₱${employeeData.lifeInsurance.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item">
+                    <span>Loan Deduction:</span>
+                    <span>₱${employeeData.loanDeduction.toLocaleString()}.00</span>
+                </div>
+                <div class="salary-item total">
+                    <span><strong>Total Deductions:</strong></span>
+                    <span><strong>₱${totalDeductions.toLocaleString()}.00</strong></span>
+                </div>
+
+                <div class="salary-item net-pay">
+                    <span><strong>NET PAY:</strong></span>
+                    <span><strong>₱${netPay.toLocaleString()}.00</strong></span>
+                </div>
+            `;
+        }
+
+        // Fix employee error function
+        function fixEmployeeError(employeeId, employeeName) {
+            if (confirm(`Are you sure you want to fix the error for ${employeeName}? This will automatically resolve the payroll calculation issues.`)) {
+                // Simulate fixing the error
+                alert(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`);
+                
+                // Update the status in the table
+                const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
+                if (row) {
+                    const statusCell = row.querySelector('.status-badge');
+                    statusCell.textContent = 'Complete';
+                    statusCell.className = 'status-badge status-completed';
+                    
+                    // Remove the fix button
+                    const fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
+                    if (fixButton) {
+                        fixButton.remove();
+                    }
+                }
+            }
+        }
+
+        // Filter payroll runs function
+        function filterPayrollRuns() {
+            const periodFilter = document.getElementById('period-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const table = document.querySelector('#payroll-runs .table tbody');
+            const rows = table.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const periodCell = row.cells[1]; // Period column
+                const statusCell = row.cells[3]; // Status column
+                
+                let showRow = true;
+                
+                if (periodFilter && periodCell.textContent.trim() !== periodFilter) {
+                    showRow = false;
+                }
+                
+                if (statusFilter) {
+                    const statusText = statusCell.textContent.trim().toLowerCase();
+                    const statusMatch = 
+                        (statusFilter === 'completed' && statusText.includes('completed')) ||
+                        (statusFilter === 'pending' && statusText.includes('pending')) ||
+                        (statusFilter === 'error' && statusText.includes('error'));
+                    
+                    if (!statusMatch) {
+                        showRow = false;
+                    }
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
         }
 
         // Payslip functions
