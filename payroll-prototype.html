@@ -12,92 +12,127 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #f8fafc;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            overflow: hidden;
-            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
         }
 
         .screen {
             display: none;
-            padding: 30px;
-            min-height: 600px;
+            flex: 1;
+            padding: 0;
         }
 
         .screen.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Make login screen visible by default */
         #login {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
 
         .header {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-            color: white;
-            padding: 20px 30px;
+            background: #ffffff;
+            color: #1a202c;
+            padding: 0 24px;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
         }
 
         .nav-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 24px;
+            background: #f8fafc;
+        }
+
+        .content-header {
+            margin-bottom: 24px;
+        }
+
+        .content-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0 0 8px 0;
+        }
+
+        .content-header p {
+            color: #718096;
+            margin: 0;
+            font-size: 16px;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 500;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            transition: all 0.2s ease;
+            min-height: 40px;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            background: #3182ce;
             color: white;
             border: none;
-            transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+            background: #2c5282;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
+            background: #ffffff;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
         }
 
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+            background: #f7fafc;
+            border-color: #cbd5e0;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(113, 128, 150, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .btn-success {
@@ -181,29 +216,33 @@
         }
 
         .dashboard-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-            padding: 30px;
+            background: #ffffff;
+            padding: 32px;
             border-radius: 12px;
             text-align: center;
             border: 1px solid #e2e8f0;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .dashboard-card:hover {
-            border-color: #4299e1;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
+            border-color: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
 
         .dashboard-card h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
+            color: #1a202c;
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: 600;
         }
 
         .dashboard-card p {
-            color: #6c757d;
+            color: #718096;
+            font-size: 15px;
+            line-height: 1.5;
         }
 
         .table {
@@ -372,36 +411,40 @@
 
         <!-- Login Screen -->
         <div id="login" class="screen active">
-            <div class="login-form">
-                <h2>Login</h2>
+            <div style="max-width: 400px; margin: 0 auto; padding: 48px; background: white; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h1 style="font-size: 32px; font-weight: 700; color: #1a202c; margin: 0 0 8px 0;">Welcome Back</h1>
+                    <p style="color: #718096; font-size: 16px; margin: 0;">Sign in to your payroll management system</p>
+                </div>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" required>
+                        <label for="email" style="font-weight: 600; color: #2d3748; margin-bottom: 8px; display: block;">Email Address</label>
+                        <input type="email" id="email" required style="width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; box-sizing: border-box;" placeholder="Enter your email">
                     </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" required>
+                    <div class="form-group" style="margin-top: 24px;">
+                        <label for="password" style="font-weight: 600; color: #2d3748; margin-bottom: 8px; display: block;">Password</label>
+                        <input type="password" id="password" required style="width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; box-sizing: border-box;" placeholder="Enter your password">
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: flex; align-items: center; font-weight: normal;">
-                            <input type="checkbox" style="margin-right: 8px;"> Remember me
+                    <div class="form-group" style="margin-top: 24px; display: flex; align-items: center; justify-content: space-between;">
+                        <label style="display: flex; align-items: center; color: #4a5568; font-size: 14px; cursor: pointer;">
+                            <input type="checkbox" id="remember" style="margin-right: 8px;"> Remember me
                         </label>
+                        <a href="#" onclick="alert('Forgot password feature would be implemented here')" style="color: #3182ce; text-decoration: none; font-size: 14px; font-weight: 500;">Forgot Password?</a>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 10px;">Login</button>
-                    <div style="text-align: center;">
-                        <a href="#" onclick="alert('Forgot password feature would be implemented here')" style="color: #3498db; text-decoration: none;">Forgot Password?</a>
-                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 32px; padding: 16px; font-size: 16px; font-weight: 600;">Sign In</button>
                 </form>
             </div>
         </div>
 
         <!-- Dashboard Screen -->
         <div id="dashboard" class="screen">
-            <h2>Dashboard</h2>
-            <p>Welcome back! Here's an overview of your payroll management system.</p>
-            
-            <div class="dashboard-grid">
+            <div class="content">
+                <div class="content-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back! Here's an overview of your payroll management system.</p>
+                </div>
+                
+                <div class="dashboard-grid">
                 <div class="dashboard-card" onclick="showScreen('payroll-runs')">
                     <h3>Payroll Runs</h3>
                     <p>Manage and review payroll runs</p>
@@ -414,15 +457,19 @@
                     <h3>Settings</h3>
                     <p>Configure system settings</p>
                 </div>
+                </div>
             </div>
         </div>
 
         <!-- Payroll Runs Screen -->
         <div id="payroll-runs" class="screen">
-            <div class="back-btn">
-                <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
-            </div>
-            <h2>Payroll Runs</h2>
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+                </div>
+                <div class="content-header">
+                    <h1>Payroll Runs</h1>
+                </div>
             
             <div class="filters">
                 <div class="form-group">
@@ -484,14 +531,18 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
 
         <!-- Run Details Screen -->
         <div id="run-details" class="screen">
-            <div class="back-btn">
-                <button class="btn btn-secondary" onclick="showScreen('payroll-runs')">← Back to Payroll Runs</button>
-            </div>
-            <h2>Run Details - RUN-001</h2>
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('payroll-runs')">← Back to Payroll Runs</button>
+                </div>
+                <div class="content-header">
+                    <h1>Run Details - RUN-001</h1>
+                </div>
             <p><strong>Period:</strong> March 2024 | <strong>Status:</strong> <span class="status-badge status-error">Error</span> | <strong>Total Employees:</strong> 25</p>
             
             <div class="error-banner">
@@ -563,16 +614,19 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
 
         <!-- Payslip Screen -->
         <div id="payslip" class="screen">
-            <div class="back-btn">
-                <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
-            </div>
-            
-            <h2>Employee Payslips</h2>
-            <p>Select an employee to view their payslip details</p>
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+                </div>
+                <div class="content-header">
+                    <h1>Employee Payslips</h1>
+                    <p>Select an employee to view their payslip details</p>
+                </div>
             
             <div class="filters" style="margin-bottom: 20px;">
                 <div class="form-group">
@@ -661,13 +715,15 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
 
         <!-- Individual Employee Payslip Screen -->
         <div id="employee-payslip" class="screen">
-            <div class="back-btn">
-                <button class="btn btn-secondary" onclick="showScreen('payslip')">← Back to Employee List</button>
-            </div>
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('payslip')">← Back to Employee List</button>
+                </div>
             
             <div class="payslip-header">
                 <h2>Employee Payslip</h2>
@@ -824,14 +880,18 @@
                 <p>Compliant with BIR, SSS, PhilHealth, and Pag-IBIG requirements</p>
                 <p>Payslip generated on: April 5, 2024 at 9:30 AM</p>
             </div>
+            </div>
         </div>
 
         <!-- Settings Screen -->
         <div id="settings" class="screen">
-            <div class="back-btn">
-                <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
-            </div>
-            <h2>Settings</h2>
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+                </div>
+                <div class="content-header">
+                    <h1>Settings</h1>
+                </div>
             
             <div class="settings-section">
                 <h3>Error Handling</h3>
@@ -896,6 +956,7 @@
             <div style="margin-top: 30px;">
                 <button class="btn btn-success" onclick="saveSettings()">Save Settings</button>
                 <button class="btn btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+            </div>
             </div>
         </div>
     </div>
