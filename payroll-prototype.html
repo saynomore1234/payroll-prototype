@@ -2261,24 +2261,23 @@
         }
 
         function executeResetSettings() {
-                // Reset toggles
-                const toggles = document.querySelectorAll('.toggle-switch');
-                toggles.forEach(toggle => {
-                    if (toggle.parentElement.querySelector('strong').textContent.includes('Auto-highlight errors') ||
-                        toggle.parentElement.querySelector('strong').textContent.includes('Email notifications') ||
-                        toggle.parentElement.querySelector('strong').textContent.includes('Error alerts')) {
-                        toggle.classList.add('active');
-                    } else {
-                        toggle.classList.remove('active');
-                    }
-                });
-                
-                // Reset form fields
-                document.getElementById('overtime-threshold').value = 40;
-                document.getElementById('max-hours').value = 80;
-                
-                showNotification('Settings reset to defaults', 'success');
-            }
+            // Reset toggles
+            const toggles = document.querySelectorAll('.toggle-switch');
+            toggles.forEach(toggle => {
+                if (toggle.parentElement.querySelector('strong').textContent.includes('Auto-highlight errors') ||
+                    toggle.parentElement.querySelector('strong').textContent.includes('Email notifications') ||
+                    toggle.parentElement.querySelector('strong').textContent.includes('Error alerts')) {
+                    toggle.classList.add('active');
+                } else {
+                    toggle.classList.remove('active');
+                }
+            });
+            
+            // Reset form fields
+            document.getElementById('overtime-threshold').value = 40;
+            document.getElementById('max-hours').value = 80;
+            
+            showNotification('Settings reset to defaults', 'success');
         }
 
         // Employee list filtering
@@ -2619,21 +2618,20 @@
         }
 
         function executeFixError(employeeId, employeeName) {
-                // Simulate fixing the error
-                showNotification(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`, 'success');
+            // Simulate fixing the error
+            showNotification(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`, 'success');
+            
+            // Update the status in the table
+            const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
+            if (row) {
+                const statusCell = row.querySelector('.status-badge');
+                statusCell.textContent = 'Complete';
+                statusCell.className = 'status-badge status-completed';
                 
-                // Update the status in the table
-                const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
-                if (row) {
-                    const statusCell = row.querySelector('.status-badge');
-                    statusCell.textContent = 'Complete';
-                    statusCell.className = 'status-badge status-completed';
-                    
-                    // Remove the fix button
-                    const fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
-                    if (fixButton) {
-                        fixButton.remove();
-                    }
+                // Remove the fix button
+                const fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
+                if (fixButton) {
+                    fixButton.remove();
                 }
             }
         }
@@ -3101,33 +3099,32 @@ Leave Request Details (${leaveId}):
         }
 
         function executeReconsiderLeave(leaveId) {
-                // Find the row by looking for the leave ID in the action buttons
-                const table = document.querySelector('#leave-requests-list');
-                const rows = table.querySelectorAll('tr');
-                let targetRow = null;
-                
-                rows.forEach(row => {
-                    const actionCell = row.cells[6];
-                    if (actionCell.innerHTML.includes(leaveId)) {
-                        targetRow = row;
-                    }
-                });
-                
-                if (targetRow) {
-                    // Update status
-                    const statusCell = targetRow.cells[5];
-                    statusCell.innerHTML = '<span class="status-badge status-pending">Pending</span>';
-                    
-                    // Update action buttons
-                    const actionCell = targetRow.cells[6];
-                    actionCell.innerHTML = `
-                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
-                        <button class="btn btn-primary" onclick="approveLeave('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
-                        <button class="btn btn-danger" onclick="rejectLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
-                    `;
-                    
-                    showNotification(`Leave request ${leaveId} is now under reconsideration!`, 'warning');
+            // Find the row by looking for the leave ID in the action buttons
+            const table = document.querySelector('#leave-requests-list');
+            const rows = table.querySelectorAll('tr');
+            let targetRow = null;
+            
+            rows.forEach(row => {
+                const actionCell = row.cells[6];
+                if (actionCell.innerHTML.includes(leaveId)) {
+                    targetRow = row;
                 }
+            });
+            
+            if (targetRow) {
+                // Update status
+                const statusCell = targetRow.cells[5];
+                statusCell.innerHTML = '<span class="status-badge status-pending">Pending</span>';
+                
+                // Update action buttons
+                const actionCell = targetRow.cells[6];
+                actionCell.innerHTML = `
+                    <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                    <button class="btn btn-primary" onclick="approveLeave('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
+                    <button class="btn btn-danger" onclick="rejectLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
+                `;
+                
+                showNotification(`Leave request ${leaveId} is now under reconsideration!`, 'warning');
             }
         }
 
@@ -3157,30 +3154,29 @@ Leave Request Details (${leaveId}):
         }
 
         function executePrintPayslip() {
-                const payslipContent = document.getElementById('employee-payslip').innerHTML;
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <html>
-                        <head>
-                            <title>Payslip - ${document.querySelector('#employee-payslip .payslip-header p').textContent}</title>
-                            <style>
-                                body { font-family: Arial, sans-serif; margin: 20px; }
-                                .screen { display: block !important; }
-                                .back-btn { display: none; }
-                                .btn { display: none; }
-                                .header { display: none; }
-                                @media print {
-                                    body { margin: 0; }
-                                }
-                            </style>
-                        </head>
-                        <body>${payslipContent}</body>
-                    </html>
-                `);
-                printWindow.document.close();
-                printWindow.focus();
-                printWindow.print();
-            }
+            const payslipContent = document.getElementById('employee-payslip').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Payslip - ${document.querySelector('#employee-payslip .payslip-header p').textContent}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            .screen { display: block !important; }
+                            .back-btn { display: none; }
+                            .btn { display: none; }
+                            .header { display: none; }
+                            @media print {
+                                body { margin: 0; }
+                            }
+                        </style>
+                    </head>
+                    <body>${payslipContent}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
         }
 
         function downloadPayslip() {
