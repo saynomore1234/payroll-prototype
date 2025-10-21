@@ -987,6 +987,7 @@
                 <p><strong>Period:</strong> March 2024</p>
                 <p><strong>Department:</strong> Engineering</p>
                 <div style="margin-top: 15px;">
+                    <button class="btn btn-warning" onclick="editPayslip()">✏️ Edit Payslip</button>
                     <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
                     <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
                     <button class="btn btn-secondary" onclick="emailPayslip()">📧 Email Payslip</button>
@@ -1833,6 +1834,97 @@
         </div>
     </div>
 
+    <!-- Edit Payslip Modal -->
+    <div id="editPayslipModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Edit Payslip</h2>
+                <span class="close" onclick="closeModal('editPayslipModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editPayslipForm">
+                    <div class="form-group">
+                        <label for="editEmployeeName">Employee</label>
+                        <input type="text" id="editEmployeeName" readonly>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px; color: #2d3748;">Earnings</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editBasicSalary">Basic Salary (₱)</label>
+                            <input type="number" id="editBasicSalary" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editOvertimeHours">Overtime Hours</label>
+                            <input type="number" id="editOvertimeHours" step="0.5" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editPerformanceBonus">Performance Bonus (₱)</label>
+                            <input type="number" id="editPerformanceBonus" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProjectIncentive">Project Incentive (₱)</label>
+                            <input type="number" id="editProjectIncentive" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editThirteenthMonth">13th Month Pay (₱)</label>
+                        <input type="number" id="editThirteenthMonth" step="0.01" required>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px; color: #2d3748;">Government Contributions</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editSSS">SSS Contribution (₱)</label>
+                            <input type="number" id="editSSS" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPhilHealth">PhilHealth (₱)</label>
+                            <input type="number" id="editPhilHealth" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPagIBIG">Pag-IBIG (₱)</label>
+                        <input type="number" id="editPagIBIG" step="0.01" required>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px; color: #2d3748;">Tax & Other Deductions</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editWithholdingTax">Withholding Tax (₱)</label>
+                            <input type="number" id="editWithholdingTax" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editHealthInsurance">Health Insurance (₱)</label>
+                            <input type="number" id="editHealthInsurance" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editLifeInsurance">Life Insurance (₱)</label>
+                            <input type="number" id="editLifeInsurance" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editLoanDeduction">Loan Deduction (₱)</label>
+                            <input type="number" id="editLoanDeduction" step="0.01" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editReason">Reason for Manual Edit</label>
+                        <textarea id="editReason" placeholder="Please provide a reason for manually editing this payslip..." required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('editPayslipModal')">Cancel</button>
+                <button class="btn btn-warning" onclick="savePayslipEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="modal">
         <div class="modal-content">
@@ -2314,6 +2406,7 @@
                     </div>
                 ` : ''}
                 <div style="margin-top: 15px;">
+                    <button class="btn btn-warning" onclick="editPayslip()">✏️ Edit Payslip</button>
                     <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
                     <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
                     <button class="btn btn-secondary" onclick="emailPayslip()">📧 Email Payslip</button>
@@ -3201,6 +3294,137 @@ Leave Request Details (${leaveId}):
                     showNotification(`✅ Payslip sent to ${email} successfully!`, 'success');
                 }, 2000);
             }
+        }
+
+        // Edit Payslip Functions
+        function editPayslip() {
+            // Get current payslip data from the displayed payslip
+            const employeeName = document.querySelector('#employee-payslip .payslip-header p').textContent.split('(')[0].split(':')[1].trim();
+            const employeeId = document.querySelector('#employee-payslip .payslip-header p').textContent.split('(')[1].split(')')[0].trim();
+            
+            // Get current values from the payslip display
+            const basicSalary = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(2) span:last-child').textContent.replace('₱', '').replace(',', ''));
+            const overtimeHours = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(3) span:first-child').textContent.match(/(\d+(?:\.\d+)?)/)[1]);
+            const performanceBonus = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(4) span:last-child').textContent.replace('₱', '').replace(',', ''));
+            const projectIncentive = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(5) span:last-child').textContent.replace('₱', '').replace(',', ''));
+            const thirteenthMonth = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(6) span:last-child').textContent.replace('₱', '').replace(',', ''));
+            
+            // Get government contributions
+            const sss = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(8) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            const philhealth = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(9) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            const pagibig = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(10) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            
+            // Get tax and other deductions
+            const withholdingTax = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(12) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            const healthInsurance = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(13) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            const lifeInsurance = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(14) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            const loanDeduction = parseFloat(document.querySelector('#employee-payslip .salary-item:nth-child(15) span:last-child').textContent.replace('-₱', '').replace(',', ''));
+            
+            // Populate the edit form
+            document.getElementById('editEmployeeName').value = `${employeeName} (${employeeId})`;
+            document.getElementById('editBasicSalary').value = basicSalary;
+            document.getElementById('editOvertimeHours').value = overtimeHours;
+            document.getElementById('editPerformanceBonus').value = performanceBonus;
+            document.getElementById('editProjectIncentive').value = projectIncentive;
+            document.getElementById('editThirteenthMonth').value = thirteenthMonth;
+            document.getElementById('editSSS').value = sss;
+            document.getElementById('editPhilHealth').value = philhealth;
+            document.getElementById('editPagIBIG').value = pagibig;
+            document.getElementById('editWithholdingTax').value = withholdingTax;
+            document.getElementById('editHealthInsurance').value = healthInsurance;
+            document.getElementById('editLifeInsurance').value = lifeInsurance;
+            document.getElementById('editLoanDeduction').value = loanDeduction;
+            document.getElementById('editReason').value = '';
+            
+            // Show the modal
+            document.getElementById('editPayslipModal').style.display = 'block';
+        }
+
+        function savePayslipEdit() {
+            // Get form values
+            const form = document.getElementById('editPayslipForm');
+            const formData = new FormData(form);
+            
+            // Validate required fields
+            const requiredFields = ['editBasicSalary', 'editOvertimeHours', 'editPerformanceBonus', 'editProjectIncentive', 'editThirteenthMonth', 'editSSS', 'editPhilHealth', 'editPagIBIG', 'editWithholdingTax', 'editHealthInsurance', 'editLifeInsurance', 'editLoanDeduction', 'editReason'];
+            
+            for (let field of requiredFields) {
+                if (!document.getElementById(field).value.trim()) {
+                    showNotification(`Please fill in all required fields`, 'error');
+                    return;
+                }
+            }
+            
+            // Get the new values
+            const newData = {
+                basicSalary: parseFloat(document.getElementById('editBasicSalary').value),
+                overtimeHours: parseFloat(document.getElementById('editOvertimeHours').value),
+                performanceBonus: parseFloat(document.getElementById('editPerformanceBonus').value),
+                projectIncentive: parseFloat(document.getElementById('editProjectIncentive').value),
+                thirteenthMonth: parseFloat(document.getElementById('editThirteenthMonth').value),
+                sss: parseFloat(document.getElementById('editSSS').value),
+                philhealth: parseFloat(document.getElementById('editPhilHealth').value),
+                pagibig: parseFloat(document.getElementById('editPagIBIG').value),
+                withholdingTax: parseFloat(document.getElementById('editWithholdingTax').value),
+                healthInsurance: parseFloat(document.getElementById('editHealthInsurance').value),
+                lifeInsurance: parseFloat(document.getElementById('editLifeInsurance').value),
+                loanDeduction: parseFloat(document.getElementById('editLoanDeduction').value),
+                reason: document.getElementById('editReason').value
+            };
+            
+            // Calculate overtime pay (assuming ₱156.25 per hour)
+            const overtimeRate = 156.25;
+            const overtimePay = newData.overtimeHours * overtimeRate;
+            
+            // Calculate totals
+            const totalGrossPay = newData.basicSalary + overtimePay + newData.performanceBonus + newData.projectIncentive + newData.thirteenthMonth;
+            const totalDeductions = newData.sss + newData.philhealth + newData.pagibig + newData.withholdingTax + newData.healthInsurance + newData.lifeInsurance + newData.loanDeduction;
+            const netPay = totalGrossPay - totalDeductions;
+            
+            // Update the payslip display
+            updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
+            
+            // Close modal and show success message
+            closeModal('editPayslipModal');
+            showNotification('✅ Payslip updated successfully!', 'success');
+            
+            // Log the edit reason
+            console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+        }
+
+        function updatePayslipDisplay(data, overtimePay, totalGrossPay, totalDeductions, netPay) {
+            // Update earnings section
+            document.querySelector('#employee-payslip .salary-item:nth-child(2) span:last-child').textContent = `₱${data.basicSalary.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(3) span:first-child').textContent = `Overtime (${data.overtimeHours} hrs @ ₱156.25):`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(3) span:last-child').textContent = `₱${overtimePay.toFixed(2)}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(4) span:last-child').textContent = `₱${data.performanceBonus.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(5) span:last-child').textContent = `₱${data.projectIncentive.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(6) span:last-child').textContent = `₱${data.thirteenthMonth.toFixed(2)}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(7) span:last-child').textContent = `₱${totalGrossPay.toFixed(2)}`;
+            
+            // Update government contributions
+            document.querySelector('#employee-payslip .salary-item:nth-child(8) span:last-child').textContent = `-₱${data.sss.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(9) span:last-child').textContent = `-₱${data.philhealth.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(10) span:last-child').textContent = `-₱${data.pagibig.toLocaleString()}`;
+            
+            // Update tax and other deductions
+            document.querySelector('#employee-payslip .salary-item:nth-child(12) span:last-child').textContent = `-₱${data.withholdingTax.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(13) span:last-child').textContent = `-₱${data.healthInsurance.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(14) span:last-child').textContent = `-₱${data.lifeInsurance.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(15) span:last-child').textContent = `-₱${data.loanDeduction.toLocaleString()}`;
+            document.querySelector('#employee-payslip .salary-item:nth-child(16) span:last-child').textContent = `-₱${totalDeductions.toFixed(2)}`;
+            
+            // Update net pay
+            document.querySelector('#employee-payslip .salary-item:nth-child(17) span:last-child').textContent = `₱${netPay.toFixed(2)}`;
+            
+            // Update YTD summary (simulate some changes)
+            const ytdGross = parseFloat(document.querySelector('#employee-payslip .ytd-item:nth-child(2) span:last-child').textContent.replace('₱', '').replace(',', '')) + (totalGrossPay - 31364.58);
+            const ytdDeductions = parseFloat(document.querySelector('#employee-payslip .ytd-item:nth-child(3) span:last-child').textContent.replace('₱', '').replace(',', '')) + (totalDeductions - 8964.58);
+            const ytdNet = ytdGross - ytdDeductions;
+            
+            document.querySelector('#employee-payslip .ytd-item:nth-child(2) span:last-child').textContent = `₱${ytdGross.toFixed(2)}`;
+            document.querySelector('#employee-payslip .ytd-item:nth-child(3) span:last-child').textContent = `₱${ytdDeductions.toFixed(2)}`;
+            document.querySelector('#employee-payslip .ytd-item:nth-child(4) span:last-child').textContent = `₱${ytdNet.toFixed(2)}`;
         }
 
         // Close modals when clicking outside
