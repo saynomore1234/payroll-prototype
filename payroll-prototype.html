@@ -12,18 +12,20 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .screen {
@@ -42,12 +44,13 @@
         }
 
         .header {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             color: white;
             padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .logo {
@@ -72,48 +75,68 @@
         }
 
         .btn-primary {
-            background: #3498db;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background: #2980b9;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
         }
 
         .btn-secondary {
-            background: #95a5a6;
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
             color: white;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
-            background: #7f8c8d;
+            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(113, 128, 150, 0.3);
         }
 
         .btn-success {
-            background: #27ae60;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         .btn-success:hover {
-            background: #229954;
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
         }
 
         .btn-warning {
-            background: #f39c12;
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
             color: white;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         .btn-warning:hover {
-            background: #e67e22;
+            background: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(221, 107, 32, 0.3);
         }
 
         .btn-danger {
-            background: #e74c3c;
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
             color: white;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         .btn-danger:hover {
-            background: #c0392b;
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
         }
 
         .form-group {
@@ -158,18 +181,20 @@
         }
 
         .dashboard-card {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
-            border: 2px solid #e9ecef;
+            border: 1px solid #e2e8f0;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .dashboard-card:hover {
-            border-color: #3498db;
-            transform: translateY(-2px);
+            border-color: #4299e1;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.15);
         }
 
         .dashboard-card h3 {
@@ -438,7 +463,7 @@
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
                         <td>25</td>
-                        <td>$125,000</td>
+                        <td>₱784,114.50</td>
                         <td><button class="btn btn-primary" onclick="showScreen('run-details')">View Details</button></td>
                     </tr>
                     <tr>
@@ -446,7 +471,7 @@
                         <td>February 2024</td>
                         <td><span class="status-badge status-completed">Completed</span></td>
                         <td>24</td>
-                        <td>$120,000</td>
+                        <td>₱752,750.00</td>
                         <td><button class="btn btn-primary" onclick="showScreen('run-details')">View Details</button></td>
                     </tr>
                     <tr>
@@ -454,7 +479,7 @@
                         <td>January 2024</td>
                         <td><span class="status-badge status-pending">Pending</span></td>
                         <td>23</td>
-                        <td>$115,000</td>
+                        <td>₱721,385.50</td>
                         <td><button class="btn btn-primary" onclick="showScreen('run-details')">View Details</button></td>
                     </tr>
                 </tbody>
@@ -496,45 +521,45 @@
                         <td>John Smith</td>
                         <td>Engineering</td>
                         <td>45</td>
-                        <td>$4,500</td>
+                        <td>₱31,364.58</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-001', 'John Smith', 'Engineering', 'Senior Developer')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-002</td>
                         <td>Jane Doe</td>
                         <td>Marketing</td>
                         <td>40</td>
-                        <td>$3,200</td>
+                        <td>₱28,500.00</td>
                         <td><span class="status-badge status-completed">OK</span></td>
-                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-002', 'Jane Doe', 'Marketing', 'Marketing Manager')">View Payslip</button></td>
                     </tr>
                     <tr class="error-row">
                         <td>EMP-003</td>
                         <td>Mike Johnson</td>
                         <td>Sales</td>
                         <td>50</td>
-                        <td>$5,000</td>
+                        <td>₱35,750.00</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-003', 'Mike Johnson', 'Sales', 'Sales Representative')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-004</td>
                         <td>Sarah Wilson</td>
                         <td>HR</td>
                         <td>40</td>
-                        <td>$3,800</td>
+                        <td>₱26,800.00</td>
                         <td><span class="status-badge status-completed">OK</span></td>
-                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-004', 'Sarah Wilson', 'HR', 'HR Specialist')">View Payslip</button></td>
                     </tr>
                     <tr class="error-row">
                         <td>EMP-005</td>
                         <td>David Brown</td>
                         <td>Finance</td>
                         <td>42</td>
-                        <td>$4,200</td>
+                        <td>₱29,200.00</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="showScreen('payslip')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-005', 'David Brown', 'Finance', 'Financial Analyst')">View Payslip</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -587,7 +612,7 @@
                         <td>Senior Developer</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-001', 'John Smith')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-001', 'John Smith', 'Engineering', 'Senior Developer')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-002</td>
@@ -596,7 +621,7 @@
                         <td>Marketing Manager</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-completed">Complete</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-002', 'Jane Doe')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-002', 'Jane Doe', 'Marketing', 'Marketing Manager')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-003</td>
@@ -605,7 +630,7 @@
                         <td>Sales Representative</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-003', 'Mike Johnson')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-003', 'Mike Johnson', 'Sales', 'Sales Representative')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-004</td>
@@ -614,7 +639,7 @@
                         <td>HR Specialist</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-completed">Complete</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-004', 'Sarah Wilson')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-004', 'Sarah Wilson', 'HR', 'HR Specialist')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-005</td>
@@ -623,7 +648,7 @@
                         <td>Financial Analyst</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-error">Error</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-005', 'David Brown')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-005', 'David Brown', 'Finance', 'Financial Analyst')">View Payslip</button></td>
                     </tr>
                     <tr>
                         <td>EMP-006</td>
@@ -632,7 +657,7 @@
                         <td>Frontend Developer</td>
                         <td>March 2024</td>
                         <td><span class="status-badge status-completed">Complete</span></td>
-                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-006', 'Lisa Garcia')">View Payslip</button></td>
+                        <td><button class="btn btn-primary" onclick="viewEmployeePayslip('EMP-006', 'Lisa Garcia', 'Engineering', 'Frontend Developer')">View Payslip</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -682,103 +707,121 @@
                 <div class="salary-breakdown">
                     <h3>Earnings</h3>
                     <div class="salary-item">
-                        <span>Base Salary:</span>
-                        <span>$4,000.00</span>
+                        <span>Basic Salary:</span>
+                        <span>₱25,000.00</span>
                     </div>
                     <div class="salary-item">
-                        <span>Overtime (5 hrs @ $50):</span>
-                        <span>$250.00</span>
+                        <span>Overtime (5 hrs @ ₱156.25):</span>
+                        <span>₱781.25</span>
                     </div>
                     <div class="salary-item">
                         <span>Performance Bonus:</span>
-                        <span>$250.00</span>
+                        <span>₱2,500.00</span>
                     </div>
                     <div class="salary-item">
                         <span>Project Incentive:</span>
-                        <span>$100.00</span>
+                        <span>₱1,000.00</span>
                     </div>
-                    <div class="salary-item total" style="border-top: 2px solid #27ae60; margin-top: 10px;">
+                    <div class="salary-item">
+                        <span>13th Month Pay (1/12):</span>
+                        <span>₱2,083.33</span>
+                    </div>
+                    <div class="salary-item total" style="border-top: 2px solid #38a169; margin-top: 10px;">
                         <span><strong>Total Gross Pay:</strong></span>
-                        <span><strong>$4,600.00</strong></span>
+                        <span><strong>₱31,364.58</strong></span>
                     </div>
                     
-                    <h3 style="margin-top: 30px;">Deductions</h3>
+                    <h3 style="margin-top: 30px;">Government Mandatory Contributions</h3>
                     <div class="salary-item">
-                        <span>Federal Income Tax (22%):</span>
-                        <span>-$1,012.00</span>
+                        <span>SSS Contribution (₱1,125.00):</span>
+                        <span>-₱1,125.00</span>
                     </div>
                     <div class="salary-item">
-                        <span>State Income Tax (5%):</span>
-                        <span>-$230.00</span>
+                        <span>PhilHealth (₱400.00):</span>
+                        <span>-₱400.00</span>
                     </div>
                     <div class="salary-item">
-                        <span>Social Security (6.2%):</span>
-                        <span>-$285.20</span>
+                        <span>Pag-IBIG (₱100.00):</span>
+                        <span>-₱100.00</span>
                     </div>
+                    
+                    <h3 style="margin-top: 30px;">Tax Deductions</h3>
                     <div class="salary-item">
-                        <span>Medicare (1.45%):</span>
-                        <span>-$66.70</span>
+                        <span>Withholding Tax (BIR):</span>
+                        <span>-₱2,500.00</span>
                     </div>
+                    
+                    <h3 style="margin-top: 30px;">Other Deductions</h3>
                     <div class="salary-item">
-                        <span>Health Insurance:</span>
-                        <span>-$150.00</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>Dental Insurance:</span>
-                        <span>-$25.00</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>401(k) Contribution (5%):</span>
-                        <span>-$230.00</span>
+                        <span>Health Insurance (HMO):</span>
+                        <span>-₱500.00</span>
                     </div>
                     <div class="salary-item">
                         <span>Life Insurance:</span>
-                        <span>-$15.00</span>
+                        <span>-₱200.00</span>
                     </div>
-                    <div class="salary-item total" style="border-top: 2px solid #e74c3c; margin-top: 10px;">
+                    <div class="salary-item">
+                        <span>Loan Deduction:</span>
+                        <span>-₱1,000.00</span>
+                    </div>
+                    <div class="salary-item total" style="border-top: 2px solid #e53e3e; margin-top: 10px;">
                         <span><strong>Total Deductions:</strong></span>
-                        <span><strong>-$2,013.90</strong></span>
+                        <span><strong>-₱5,825.00</strong></span>
                     </div>
                     
-                    <div class="salary-item total" style="border-top: 3px solid #2c3e50; margin-top: 20px; font-size: 18px; background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <div class="salary-item total" style="border-top: 3px solid #2d3748; margin-top: 20px; font-size: 18px; background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px;">
                         <span><strong>NET PAY:</strong></span>
-                        <span><strong>$2,586.10</strong></span>
+                        <span><strong>₱25,539.58</strong></span>
                     </div>
                 </div>
             </div>
 
             <!-- Additional Payslip Information -->
             <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
                     <h3>Year-to-Date Summary</h3>
                     <div class="salary-item">
                         <span>Gross Pay YTD:</span>
-                        <span>$13,800.00</span>
+                        <span>₱94,093.74</span>
                     </div>
                     <div class="salary-item">
-                        <span>Taxes Paid YTD:</span>
-                        <span>$4,041.70</span>
+                        <span>SSS Contributions YTD:</span>
+                        <span>₱3,375.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>PhilHealth YTD:</span>
+                        <span>₱1,200.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Pag-IBIG YTD:</span>
+                        <span>₱300.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Withholding Tax YTD:</span>
+                        <span>₱7,500.00</span>
                     </div>
                     <div class="salary-item">
                         <span>Net Pay YTD:</span>
-                        <span>$7,758.30</span>
+                        <span>₱76,618.74</span>
                     </div>
                 </div>
                 
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
                     <h3>Payment Information</h3>
                     <p><strong>Payment Method:</strong> Direct Deposit</p>
-                    <p><strong>Bank:</strong> Chase Bank</p>
+                    <p><strong>Bank:</strong> BDO (Banco de Oro)</p>
                     <p><strong>Account:</strong> ****1234</p>
-                    <p><strong>Routing:</strong> 021000021</p>
+                    <p><strong>Branch Code:</strong> 0010</p>
                     <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                    <p><strong>Reference No:</strong> PAY-2024-001</p>
                 </div>
             </div>
 
             <!-- Payslip Footer -->
-            <div style="margin-top: 30px; padding: 20px; background: #2c3e50; color: white; border-radius: 8px; text-align: center;">
+            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); color: white; border-radius: 8px; text-align: center;">
                 <p><strong>This is a computer-generated payslip. No signature required.</strong></p>
-                <p>For questions about this payslip, contact HR at hr@company.com or call (555) 123-4567</p>
+                <p>For questions about this payslip, contact HR at hr@company.com.ph or call (02) 8XXX-XXXX</p>
+                <p>Compliant with BIR, SSS, PhilHealth, and Pag-IBIG requirements</p>
                 <p>Payslip generated on: April 5, 2024 at 9:30 AM</p>
             </div>
         </div>
@@ -809,14 +852,26 @@
             </div>
 
             <div class="settings-section">
-                <h3>Thresholds</h3>
+                <h3>Philippines Payroll Settings</h3>
                 <div class="form-group">
-                    <label for="overtime-threshold">Overtime Threshold (hours):</label>
-                    <input type="number" id="overtime-threshold" value="40" min="0" max="60">
+                    <label for="overtime-threshold">Regular Hours per Day:</label>
+                    <input type="number" id="overtime-threshold" value="8" min="0" max="12">
                 </div>
                 <div class="form-group">
                     <label for="max-hours">Maximum Hours per Pay Period:</label>
                     <input type="number" id="max-hours" value="80" min="0" max="200">
+                </div>
+                <div class="form-group">
+                    <label for="sss-contribution">SSS Contribution Rate (%):</label>
+                    <input type="number" id="sss-contribution" value="11" min="0" max="20" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="philhealth-rate">PhilHealth Rate (%):</label>
+                    <input type="number" id="philhealth-rate" value="3" min="0" max="10" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="pagibig-rate">Pag-IBIG Rate (%):</label>
+                    <input type="number" id="pagibig-rate" value="2" min="0" max="5" step="0.1">
                 </div>
             </div>
 
@@ -990,18 +1045,43 @@
         }
 
         // View individual employee payslip
-        function viewEmployeePayslip(employeeId, employeeName) {
+        function viewEmployeePayslip(employeeId, employeeName, department, position) {
             // Update the payslip header with selected employee info
             const payslipHeader = document.querySelector('#employee-payslip .payslip-header');
             payslipHeader.innerHTML = `
                 <h2>Employee Payslip</h2>
                 <p><strong>Employee:</strong> ${employeeName} (${employeeId})</p>
                 <p><strong>Period:</strong> March 2024</p>
-                <p><strong>Department:</strong> ${getEmployeeDepartment(employeeId)}</p>
+                <p><strong>Department:</strong> ${department}</p>
+                <p><strong>Position:</strong> ${position}</p>
                 <div style="margin-top: 15px;">
                     <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
                     <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
                     <button class="btn btn-secondary" onclick="emailPayslip()">📧 Email Payslip</button>
+                </div>
+            `;
+            
+            // Update employee information section
+            const employeeInfo = document.querySelector('#employee-payslip .payslip-details > div:first-child');
+            employeeInfo.innerHTML = `
+                <h3>Employee Information</h3>
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <p><strong>Employee ID:</strong> ${employeeId}</p>
+                    <p><strong>Name:</strong> ${employeeName}</p>
+                    <p><strong>Position:</strong> ${position}</p>
+                    <p><strong>Department:</strong> ${department}</p>
+                    <p><strong>Hire Date:</strong> January 15, 2022</p>
+                    <p><strong>Pay Grade:</strong> P4</p>
+                </div>
+                
+                <h3>Pay Period Details</h3>
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px;">
+                    <p><strong>Pay Period:</strong> March 1-31, 2024</p>
+                    <p><strong>Pay Date:</strong> April 5, 2024</p>
+                    <p><strong>Pay Frequency:</strong> Monthly</p>
+                    <p><strong>Hours Worked:</strong> 45 hours</p>
+                    <p><strong>Regular Hours:</strong> 40 hours</p>
+                    <p><strong>Overtime Hours:</strong> 5 hours</p>
                 </div>
             `;
             
