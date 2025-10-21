@@ -664,7 +664,7 @@
                         <label style="display: flex; align-items: center; color: #4a5568; font-size: 15px; cursor: pointer; font-weight: 500;">
                             <input type="checkbox" id="remember" style="margin-right: 10px; width: 18px; height: 18px; accent-color: #3182ce;"> Remember me
                         </label>
-                        <a href="#" onclick="alert('Forgot password feature would be implemented here')" style="color: #3182ce; text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s ease;" onmouseover="this.style.color='#2c5282'" onmouseout="this.style.color='#3182ce'">Forgot Password?</a>
+                        <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #3182ce; text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s ease;" onmouseover="this.style.color='#2c5282'" onmouseout="this.style.color='#3182ce'">Forgot Password?</a>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 36px; padding: 18px; font-size: 17px; font-weight: 700; background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%); border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(49, 130, 206, 0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(49, 130, 206, 0.4)'">Sign In to MotoPH</button>
                 </form>
@@ -1833,6 +1833,29 @@
         </div>
     </div>
 
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reset Password</h2>
+                <span class="close" onclick="closeModal('forgotPasswordModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <input type="email" id="resetEmail" required placeholder="Enter your email address">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('forgotPasswordModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="sendPasswordReset()">Send Reset Link</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Modal and notification functions
         function showNotification(message, type = 'success') {
@@ -1848,6 +1871,48 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showForgotPasswordModal() {
+            console.log('showForgotPasswordModal called');
+            const modal = document.getElementById('forgotPasswordModal');
+            if (modal) {
+                modal.style.display = 'block';
+                console.log('Modal displayed');
+            } else {
+                console.error('Forgot password modal not found');
+            }
+        }
+
+        function sendPasswordReset() {
+            const email = document.getElementById('resetEmail').value;
+            
+            if (!email) {
+                showNotification('Please enter your email address', 'error');
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const sendBtn = document.querySelector('#forgotPasswordModal .btn-primary');
+            const originalText = sendBtn.textContent;
+            sendBtn.textContent = 'Sending...';
+            sendBtn.disabled = true;
+            
+            // Simulate sending reset email
+            setTimeout(() => {
+                closeModal('forgotPasswordModal');
+                showNotification(`Password reset link sent to ${email}! Check your email for further instructions.`, 'success');
+                sendBtn.textContent = originalText;
+                sendBtn.disabled = false;
+                document.getElementById('resetEmail').value = '';
+            }, 2000);
         }
 
         function saveEmployee() {
@@ -2003,7 +2068,7 @@
                 console.log('Successfully showed screen:', screenId);
             } else {
                 console.error('Screen not found:', screenId);
-                alert('Screen not found: ' + screenId);
+                showNotification('Screen not found: ' + screenId, 'error');
             }
             
             // Show/hide logout button based on current screen
@@ -2017,28 +2082,58 @@
 
         // Login handling
         function handleLogin(event) {
+            console.log('handleLogin called');
             event.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
+            console.log('Email:', email, 'Password:', password);
+            
             // Simple validation (in real app, this would be server-side)
             if (email && password) {
-                showScreen('dashboard');
+                console.log('Validation passed, showing loading state');
+                // Show loading state
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Signing In...';
+                submitBtn.disabled = true;
+                
+                // Simulate login process
+                setTimeout(() => {
+                    console.log('Attempting to show dashboard');
+                    showScreen('dashboard');
+                    showNotification('Welcome to MotoPH Payroll Management System!', 'success');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 1000);
             } else {
-                alert('Please enter both email and password');
+                console.log('Validation failed');
+                showNotification('Please enter both email and password', 'error');
             }
         }
 
         // Logout handling
         function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                // Clear any form data
-                document.getElementById('email').value = '';
-                document.getElementById('password').value = '';
-                
-                // Return to login screen
-                showScreen('login');
-            }
+            // Create a confirmation modal instead of browser alert
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.style.display = 'block';
+            confirmModal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h2>Confirm Logout</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to logout?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button class="btn btn-danger" onclick="document.getElementById('email').value=''; document.getElementById('password').value=''; showScreen('login'); this.closest('.modal').remove();">Logout</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
         }
 
         // Filter functionality
@@ -2048,28 +2143,57 @@
             
             // In a real app, this would make an API call
             console.log('Filtering by period:', periodFilter, 'status:', statusFilter);
-            alert('Filter applied (this is a prototype)');
+            showNotification('Filter applied successfully!', 'success');
         }
 
         // Auto-fix functionality
         function autoFix() {
-            if (confirm('This will attempt to automatically fix the highlighted errors. This action will:\n\n• Fix overtime calculation errors\n• Correct tax withholding issues\n• Resolve missing employee data\n\nContinue with auto-fix?')) {
-                // In a real app, this would make an API call
-                alert('Auto-fix completed! 2 out of 3 errors were resolved.\n\nFixed issues:\n• Overtime calculation for EMP-001\n• Tax withholding for EMP-003\n\nRemaining issue: EMP-005 requires manual review');
-                
-                // Update the UI to show fewer errors
-                const errorRows = document.querySelectorAll('.error-row');
-                if (errorRows.length > 0) {
-                    errorRows[0].classList.remove('error-row');
-                    errorRows[0].querySelector('.status-badge').textContent = 'OK';
-                    errorRows[0].querySelector('.status-badge').className = 'status-badge status-completed';
-                }
+            // Create a confirmation modal
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.style.display = 'block';
+            confirmModal.innerHTML = `
+                <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h2>Auto-Fix Payroll Errors</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>This will attempt to automatically fix the highlighted errors. This action will:</p>
+                        <ul style="margin: 16px 0; padding-left: 20px;">
+                            <li>Fix overtime calculation errors</li>
+                            <li>Correct tax withholding issues</li>
+                            <li>Resolve missing employee data</li>
+                        </ul>
+                        <p>Continue with auto-fix?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button class="btn btn-primary" onclick="this.closest('.modal').remove(); executeAutoFix();">Continue Auto-Fix</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+        }
+
+        function executeAutoFix() {
+            showNotification('Auto-fix completed! 2 out of 3 errors were resolved.', 'success');
+            
+            // Update the UI to show fewer errors
+            const errorRows = document.querySelectorAll('.error-row');
+            if (errorRows.length > 0) {
+                errorRows[0].classList.remove('error-row');
+                errorRows[0].querySelector('.status-badge').textContent = 'Complete';
+                errorRows[0].querySelector('.status-badge').className = 'status-badge status-completed';
             }
         }
 
         // Export report functionality
         function exportReport() {
-            alert('Exporting payroll report... (This is a prototype)');
+            showNotification('Exporting payroll report...', 'success');
+            setTimeout(() => {
+                showNotification('Report exported successfully!', 'success');
+            }, 2000);
         }
 
         // Toggle switch functionality
@@ -2079,11 +2203,41 @@
 
         // Settings functions
         function saveSettings() {
-            alert('Settings saved successfully!');
+            showNotification('Settings saved successfully!', 'success');
         }
 
         function resetSettings() {
-            if (confirm('Are you sure you want to reset all settings to defaults?\n\nThis will:\n• Turn off auto-highlight errors\n• Reset overtime threshold to 40 hours\n• Reset max hours to 80\n• Turn off email notifications\n\nThis action cannot be undone.')) {
+            // Create a confirmation modal
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.style.display = 'block';
+            confirmModal.innerHTML = `
+                <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h2>Reset Settings</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to reset all settings to defaults?</p>
+                        <p>This will:</p>
+                        <ul style="margin: 16px 0; padding-left: 20px;">
+                            <li>Turn off auto-highlight errors</li>
+                            <li>Reset overtime threshold to 40 hours</li>
+                            <li>Reset max hours to 80</li>
+                            <li>Turn off email notifications</li>
+                        </ul>
+                        <p><strong>This action cannot be undone.</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button class="btn btn-danger" onclick="this.closest('.modal').remove(); executeResetSettings();">Reset Settings</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+        }
+
+        function executeResetSettings() {
                 // Reset toggles
                 const toggles = document.querySelectorAll('.toggle-switch');
                 toggles.forEach(toggle => {
@@ -2100,7 +2254,7 @@
                 document.getElementById('overtime-threshold').value = 40;
                 document.getElementById('max-hours').value = 80;
                 
-                alert('Settings reset to defaults');
+                showNotification('Settings reset to defaults', 'success');
             }
         }
 
@@ -2418,9 +2572,32 @@
 
         // Fix employee error function
         function fixEmployeeError(employeeId, employeeName) {
-            if (confirm(`Are you sure you want to fix the error for ${employeeName}? This will automatically resolve the payroll calculation issues.`)) {
+            // Create a confirmation modal
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.style.display = 'block';
+            confirmModal.innerHTML = `
+                <div class="modal-content" style="max-width: 450px;">
+                    <div class="modal-header">
+                        <h2>Fix Employee Error</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to fix the error for <strong>${employeeName}</strong>?</p>
+                        <p>This will automatically resolve the payroll calculation issues.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button class="btn btn-primary" onclick="this.closest('.modal').remove(); executeFixError('${employeeId}', '${employeeName}');">Fix Error</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+        }
+
+        function executeFixError(employeeId, employeeName) {
                 // Simulate fixing the error
-                alert(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`);
+                showNotification(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`, 'success');
                 
                 // Update the status in the table
                 const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
@@ -2451,11 +2628,11 @@
                 
                 let showRow = true;
                 
-                if (periodFilter && periodCell.textContent.trim() !== periodFilter) {
+                if (periodFilter && periodFilter !== 'all' && periodCell.textContent.trim() !== periodFilter) {
                     showRow = false;
                 }
                 
-                if (statusFilter) {
+                if (statusFilter && statusFilter !== 'all') {
                     const statusText = statusCell.textContent.trim().toLowerCase();
                     const statusMatch = 
                         (statusFilter === 'completed' && statusText.includes('completed')) ||
@@ -2469,6 +2646,10 @@
                 
                 row.style.display = showRow ? '' : 'none';
             });
+            
+            // Show notification about filtering
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none').length;
+            showNotification(`Showing ${visibleRows} payroll runs`, 'success');
         }
 
         // Employee Management Functions
@@ -2760,7 +2941,55 @@ Leave Request Details (${leaveId}):
 • Last Updated: March 10, 2024
             `;
             
-            alert(details);
+            // Create a detailed view modal
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2>Leave Request Details (${leaveId})</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div>
+                                <h3 style="color: #3182ce; margin-bottom: 16px;">👤 Employee Information</h3>
+                                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                                    <p><strong>Name:</strong> John Smith</p>
+                                    <p><strong>Department:</strong> Engineering</p>
+                                    <p><strong>Position:</strong> Senior Developer</p>
+                                    <p><strong>Reporting Manager:</strong> Sarah Wilson</p>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 style="color: #38a169; margin-bottom: 16px;">📅 Leave Details</h3>
+                                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                                    <p><strong>Leave Type:</strong> Vacation Leave</p>
+                                    <p><strong>Start Date:</strong> March 15, 2024</p>
+                                    <p><strong>End Date:</strong> March 17, 2024</p>
+                                    <p><strong>Duration:</strong> 3 days</p>
+                                    <p><strong>Reason:</strong> Family vacation</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 style="color: #ed8936; margin-bottom: 16px;">📊 Leave Balance</h3>
+                            <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+                                <p><strong>Total Annual Leave:</strong> 15 days</p>
+                                <p><strong>Used This Year:</strong> 8 days</p>
+                                <p><strong>Remaining:</strong> 7 days</p>
+                                <p><strong>Status:</strong> Pending Approval</p>
+                                <p><strong>Submitted:</strong> March 10, 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         function approveLeave(leaveId) {
@@ -2825,7 +3054,30 @@ Leave Request Details (${leaveId}):
         }
 
         function reconsiderLeave(leaveId) {
-            if (confirm(`Are you sure you want to reconsider leave request ${leaveId}? This will change its status back to pending.`)) {
+            // Create a confirmation modal
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.style.display = 'block';
+            confirmModal.innerHTML = `
+                <div class="modal-content" style="max-width: 450px;">
+                    <div class="modal-header">
+                        <h2>Reconsider Leave Request</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to reconsider leave request <strong>${leaveId}</strong>?</p>
+                        <p>This will change its status back to pending.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button class="btn btn-warning" onclick="this.closest('.modal').remove(); executeReconsiderLeave('${leaveId}');">Reconsider</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+        }
+
+        function executeReconsiderLeave(leaveId) {
                 // Find the row by looking for the leave ID in the action buttons
                 const table = document.querySelector('#leave-requests-list');
                 const rows = table.querySelectorAll('tr');
@@ -2858,7 +3110,30 @@ Leave Request Details (${leaveId}):
 
         // Payslip functions
         function printPayslip() {
-            if (confirm('This will open the payslip in a new window for printing. Continue?')) {
+            // Create a confirmation modal
+            const confirmModal = document.createElement('div');
+            confirmModal.className = 'modal';
+            confirmModal.style.display = 'block';
+            confirmModal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h2>Print Payslip</h2>
+                        <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <p>This will open the payslip in a new window for printing.</p>
+                        <p>Continue?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button class="btn btn-primary" onclick="this.closest('.modal').remove(); executePrintPayslip();">Print</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmModal);
+        }
+
+        function executePrintPayslip() {
                 const payslipContent = document.getElementById('employee-payslip').innerHTML;
                 const printWindow = window.open('', '_blank');
                 printWindow.document.write(`
