@@ -1191,7 +1191,7 @@
             </div>
 
             <!-- Payment Information and Year-to-Date Summary -->
-            <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div id="static-payment-info" style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
                     <h3>Payment Information</h3>
                     <p><strong>Payment Method:</strong> Direct Deposit</p>
@@ -2281,6 +2281,14 @@
                     targetScreen.style.display = 'block';
                     console.log('Successfully showed screen:', screenId);
                     
+                    // Restore static content when going back to general payslip view
+                    if (screenId === 'payslip') {
+                        const staticPayslipContent = document.querySelector('#employee-payslip .payslip-details');
+                        const staticPaymentInfo = document.querySelector('#employee-payslip #static-payment-info');
+                        if (staticPayslipContent) staticPayslipContent.style.display = 'block';
+                        if (staticPaymentInfo) staticPaymentInfo.style.display = 'block';
+                    }
+                    
                     // Force a reflow to ensure the display change takes effect
                     targetScreen.offsetHeight;
                 } else {
@@ -2523,6 +2531,12 @@
             const staticPayslipContent = document.querySelector('#employee-payslip .payslip-details');
             if (staticPayslipContent) {
                 staticPayslipContent.style.display = 'none';
+            }
+            
+            // Hide the static Payment Information and Year-to-Date sections
+            const staticPaymentInfo = document.querySelector('#employee-payslip #static-payment-info');
+            if (staticPaymentInfo) {
+                staticPaymentInfo.style.display = 'none';
             }
             
             // Update the payslip header with selected employee info
