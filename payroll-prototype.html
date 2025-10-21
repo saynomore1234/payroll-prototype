@@ -442,6 +442,48 @@
             background: #a8a8a8;
         }
 
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+            padding: 12px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: '›';
+            color: #a0aec0;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .breadcrumb-link {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: #2c5282;
+            text-decoration: underline;
+        }
+
+        .breadcrumb-current {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
         .modal-footer {
             padding: 16px 32px 24px;
             border-top: 1px solid #e2e8f0;
@@ -700,6 +742,11 @@
 
         <!-- Dashboard Screen -->
         <div id="dashboard" class="screen">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">🏠 Dashboard</span>
+                </div>
+            </div>
             <div class="content">
                 <div class="content-header">
                     <h1>Dashboard</h1>
@@ -737,10 +784,15 @@
 
         <!-- Payroll Runs Screen -->
         <div id="payroll-runs" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">📊 Payroll Runs</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Payroll Runs</h1>
                 </div>
@@ -810,10 +862,18 @@
 
         <!-- Run Details Screen -->
         <div id="run-details" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('payroll-runs')">← Back to Payroll Runs</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('payroll-runs')">📊 Payroll Runs</a>
+                </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">🔍 Run Details</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Run Details - RUN-001</h1>
                 </div>
@@ -893,10 +953,15 @@
 
         <!-- Payslip Screen -->
         <div id="payslip" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">💰 Employee Payslips</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Employee Payslips</h1>
                     <p>Select an employee to view their payslip details</p>
@@ -1003,10 +1068,18 @@
 
         <!-- Individual Employee Payslip Screen -->
         <div id="employee-payslip" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('payslip')">← Back to Employee List</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('payslip')">💰 Employee Payslips</a>
+                </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">📄 Employee Payslip</span>
+                </div>
+            </div>
+            <div class="content">
             
             <div class="payslip-header">
                 <h2>Employee Payslip</h2>
@@ -1169,10 +1242,15 @@
 
         <!-- Settings Screen -->
         <div id="settings" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">⚙️ Settings</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Settings</h1>
                 </div>
@@ -1246,10 +1324,15 @@
 
         <!-- Employee Management Screen -->
         <div id="employees" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">👥 Employee Management</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Employee Management</h1>
                     <p>Manage employee information, salaries, and employment details</p>
@@ -1381,10 +1464,15 @@
 
         <!-- Reports & Analytics Screen -->
         <div id="reports" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">📊 Reports & Analytics</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Reports & Analytics</h1>
                     <p>Payroll insights, trends, and comprehensive reports</p>
@@ -1505,10 +1593,15 @@
 
         <!-- Leave Calendar Screen -->
         <div id="leave-calendar" class="screen">
-            <div class="content">
-                <div class="back-btn">
-                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+            <div class="breadcrumb">
+                <div class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link" onclick="showScreen('dashboard')">🏠 Dashboard</a>
                 </div>
+                <div class="breadcrumb-item">
+                    <span class="breadcrumb-current">📅 Leave Calendar</span>
+                </div>
+            </div>
+            <div class="content">
                 <div class="content-header">
                     <h1>Leave Calendar</h1>
                     <p>Manage employee time-off requests and track leave balances</p>
