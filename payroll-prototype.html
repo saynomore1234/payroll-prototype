@@ -2513,6 +2513,18 @@
             // Get employee-specific data
             const employeeData = getEmployeeData(employeeId);
             
+            // Clear any existing additional info sections to prevent duplicates
+            const existingAdditionalInfo = document.querySelector('#employee-payslip .additional-info-section');
+            if (existingAdditionalInfo) {
+                existingAdditionalInfo.remove();
+            }
+            
+            // Hide the static payslip content to prevent duplicates
+            const staticPayslipContent = document.querySelector('#employee-payslip .payslip-details');
+            if (staticPayslipContent) {
+                staticPayslipContent.style.display = 'none';
+            }
+            
             // Update the payslip header with selected employee info
             const payslipHeader = document.querySelector('#employee-payslip .payslip-header');
             payslipHeader.innerHTML = `
@@ -2534,30 +2546,36 @@
                 </div>
             `;
             
-            // Update employee information section
-            const employeeInfo = document.querySelector('#employee-payslip .payslip-details > div:first-child');
-            employeeInfo.innerHTML = `
-                <h3>Employee Information</h3>
-                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <p><strong>Employee ID:</strong> ${employeeId}</p>
-                    <p><strong>Name:</strong> ${employeeName}</p>
-                    <p><strong>Position:</strong> ${position}</p>
-                    <p><strong>Department:</strong> ${department}</p>
-                    <p><strong>Hire Date:</strong> ${employeeData.hireDate}</p>
-                    <p><strong>Pay Grade:</strong> ${employeeData.payGrade}</p>
-                    <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
-                </div>
-                
-                <h3>Pay Period Details</h3>
-                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px;">
-                    <p><strong>Pay Period:</strong> March 1-31, 2024</p>
-                    <p><strong>Pay Date:</strong> April 5, 2024</p>
-                    <p><strong>Pay Frequency:</strong> Monthly</p>
-                    <p><strong>Hours Worked:</strong> ${employeeData.hoursWorked} hours</p>
-                    <p><strong>Regular Hours:</strong> ${employeeData.regularHours} hours</p>
-                    <p><strong>Overtime Hours:</strong> ${employeeData.overtimeHours} hours</p>
+            // Create new payslip details section
+            const payslipDetails = document.createElement('div');
+            payslipDetails.className = 'payslip-details';
+            payslipDetails.innerHTML = `
+                <div>
+                    <h3>Employee Information</h3>
+                    <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <p><strong>Employee ID:</strong> ${employeeId}</p>
+                        <p><strong>Name:</strong> ${employeeName}</p>
+                        <p><strong>Position:</strong> ${position}</p>
+                        <p><strong>Department:</strong> ${department}</p>
+                        <p><strong>Hire Date:</strong> ${employeeData.hireDate}</p>
+                        <p><strong>Pay Grade:</strong> ${employeeData.payGrade}</p>
+                        <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
+                    </div>
+                    
+                    <h3>Pay Period Details</h3>
+                    <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 15px; border-radius: 8px;">
+                        <p><strong>Pay Period:</strong> March 1-31, 2024</p>
+                        <p><strong>Pay Date:</strong> April 5, 2024</p>
+                        <p><strong>Pay Frequency:</strong> Monthly</p>
+                        <p><strong>Hours Worked:</strong> ${employeeData.hoursWorked} hours</p>
+                        <p><strong>Regular Hours:</strong> ${employeeData.regularHours} hours</p>
+                        <p><strong>Overtime Hours:</strong> ${employeeData.overtimeHours} hours</p>
+                    </div>
                 </div>
             `;
+            
+            // Insert the new payslip details after the header
+            payslipHeader.parentNode.insertBefore(payslipDetails, payslipHeader.nextSibling);
             
             // Update salary breakdown
             updateSalaryBreakdown(employeeData);
@@ -2835,8 +2853,18 @@
 
             `;
             
+            // Remove any existing Payment Information and Year-to-Date sections to avoid duplicates
+            const existingPaymentInfo = document.querySelector('#employee-payslip .payment-info-section');
+            const existingYTD = document.querySelector('#employee-payslip .ytd-section');
+            const existingAdditionalInfo = document.querySelector('#employee-payslip .additional-info-section');
+            
+            if (existingPaymentInfo) existingPaymentInfo.remove();
+            if (existingYTD) existingYTD.remove();
+            if (existingAdditionalInfo) existingAdditionalInfo.remove();
+            
             // Add Payment Information and Year-to-Date Summary side by side
             const additionalInfo = document.createElement('div');
+            additionalInfo.className = 'additional-info-section';
             additionalInfo.style.cssText = 'margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;';
             additionalInfo.innerHTML = `
                 <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
