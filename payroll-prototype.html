@@ -1187,20 +1187,21 @@
                         <span><strong>₱25,539.58</strong></span>
                     </div>
 
-                    <h3 style="margin-top: 30px;">Payment Information</h3>
-                    <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                        <p><strong>Payment Method:</strong> Direct Deposit</p>
-                        <p><strong>Bank:</strong> BDO (Banco de Oro)</p>
-                        <p><strong>Account:</strong> ****1234</p>
-                        <p><strong>Branch Code:</strong> 0010</p>
-                        <p><strong>Deposit Date:</strong> April 5, 2024</p>
-                        <p><strong>Reference No:</strong> PAY-2024-001</p>
-                    </div>
                 </div>
             </div>
 
-            <!-- Year-to-Date Summary -->
-            <div style="margin-top: 20px;">
+            <!-- Payment Information and Year-to-Date Summary -->
+            <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
+                    <h3>Payment Information</h3>
+                    <p><strong>Payment Method:</strong> Direct Deposit</p>
+                    <p><strong>Bank:</strong> BDO (Banco de Oro)</p>
+                    <p><strong>Account:</strong> ****1234</p>
+                    <p><strong>Branch Code:</strong> 0010</p>
+                    <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                    <p><strong>Reference No:</strong> PAY-2024-001</p>
+                </div>
+                
                 <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
                     <h3>Year-to-Date Summary</h3>
                     <div class="salary-item">
@@ -2832,8 +2833,14 @@
                     <span><strong>₱${netPay.toLocaleString()}.00</strong></span>
                 </div>
 
-                <h3 style="margin-top: 30px;">Payment Information</h3>
-                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            `;
+            
+            // Add Payment Information and Year-to-Date Summary side by side
+            const additionalInfo = document.createElement('div');
+            additionalInfo.style.cssText = 'margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;';
+            additionalInfo.innerHTML = `
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
+                    <h3>Payment Information</h3>
                     <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
                     <p><strong>Bank:</strong> ${employeeData.bankDetails.bank}</p>
                     <p><strong>Account:</strong> ${employeeData.bankDetails.account}</p>
@@ -2841,7 +2848,38 @@
                     <p><strong>Deposit Date:</strong> April 5, 2024</p>
                     <p><strong>Reference No:</strong> ${employeeData.bankDetails.referenceNo}</p>
                 </div>
+                
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
+                    <h3>Year-to-Date Summary</h3>
+                    <div class="salary-item">
+                        <span>Gross Pay YTD:</span>
+                        <span>₱94,093.74</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>SSS Contributions YTD:</span>
+                        <span>₱3,375.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>PhilHealth YTD:</span>
+                        <span>₱1,200.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Pag-IBIG YTD:</span>
+                        <span>₱300.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Withholding Tax YTD:</span>
+                        <span>₱7,500.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Net Pay YTD:</span>
+                        <span>₱76,618.74</span>
+                    </div>
+                </div>
             `;
+            
+            // Insert additional info after the salary breakdown
+            salaryBreakdown.parentNode.insertBefore(additionalInfo, salaryBreakdown.nextSibling);
         }
 
         // Fix employee error function
