@@ -667,7 +667,6 @@
                         <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #3182ce; text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s ease;" onmouseover="this.style.color='#2c5282'" onmouseout="this.style.color='#3182ce'">Forgot Password?</a>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 36px; padding: 18px; font-size: 17px; font-weight: 700; background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%); border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(49, 130, 206, 0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(49, 130, 206, 0.4)'">Sign In to MotoPH</button>
-                    <button type="button" onclick="testLogin()" style="width: 100%; margin-top: 12px; padding: 12px; font-size: 14px; font-weight: 600; background: #38a169; border: none; border-radius: 8px; color: white; cursor: pointer;">Test Login (Debug)</button>
                 </form>
             </div>
         </div>
@@ -738,7 +737,7 @@
                         <option value="error">Error</option>
                     </select>
                 </div>
-                <button class="btn btn-primary" onclick="filterRuns()">Filter</button>
+                <button class="btn btn-primary" onclick="filterPayrollRuns()">Filter</button>
             </div>
 
             <table class="table">
@@ -2129,12 +2128,6 @@
             }
         }
 
-        // Test function to check if showScreen works
-        function testLogin() {
-            console.log('testLogin called');
-            showScreen('dashboard');
-        }
-
         // Logout handling
         function logout() {
             // Create a confirmation modal instead of browser alert
@@ -2645,16 +2638,29 @@
 
             rows.forEach(row => {
                 const periodCell = row.cells[1]; // Period column
-                const statusCell = row.cells[3]; // Status column
+                const statusCell = row.cells[2]; // Status column (corrected index)
                 
                 let showRow = true;
                 
-                if (periodFilter && periodFilter !== 'all' && periodCell.textContent.trim() !== periodFilter) {
-                    showRow = false;
+                // Period filtering - convert filter values to match table data
+                if (periodFilter && periodFilter !== '') {
+                    let expectedPeriod = '';
+                    switch(periodFilter) {
+                        case '2024-01': expectedPeriod = 'January 2024'; break;
+                        case '2024-02': expectedPeriod = 'February 2024'; break;
+                        case '2024-03': expectedPeriod = 'March 2024'; break;
+                    }
+                    
+                    if (expectedPeriod && periodCell.textContent.trim() !== expectedPeriod) {
+                        showRow = false;
+                    }
                 }
                 
-                if (statusFilter && statusFilter !== 'all') {
-                    const statusText = statusCell.textContent.trim().toLowerCase();
+                // Status filtering - account for status badge wrapper
+                if (statusFilter && statusFilter !== '') {
+                    const statusBadge = statusCell.querySelector('.status-badge');
+                    const statusText = statusBadge ? statusBadge.textContent.trim().toLowerCase() : statusCell.textContent.trim().toLowerCase();
+                    
                     const statusMatch = 
                         (statusFilter === 'completed' && statusText.includes('completed')) ||
                         (statusFilter === 'pending' && statusText.includes('pending')) ||
