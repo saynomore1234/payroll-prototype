@@ -44,26 +44,61 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             min-height: 100vh;
+            position: relative;
+        }
+
+        #login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(49, 130, 206, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(56, 161, 105, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(237, 137, 54, 0.05) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .header {
-            background: #ffffff;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             color: #1a202c;
-            padding: 0 24px;
-            height: 64px;
+            padding: 0 32px;
+            height: 72px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             border-bottom: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3182ce 0%, #38a169 50%, #ed8936 100%);
         }
 
         .logo {
-            font-size: 20px;
-            font-weight: 600;
-            color: #2d3748;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo::before {
+            content: '🏢';
+            font-size: 24px;
+            filter: grayscale(0.3);
         }
 
         .nav-buttons {
@@ -216,33 +251,65 @@
         }
 
         .dashboard-card {
-            background: #ffffff;
-            padding: 32px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            padding: 36px;
+            border-radius: 16px;
             text-align: center;
             border: 1px solid #e2e8f0;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3182ce 0%, #38a169 50%, #ed8936 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .dashboard-card:hover {
             border-color: #3182ce;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .dashboard-card:hover::before {
+            transform: scaleX(1);
         }
 
         .dashboard-card h3 {
             color: #1a202c;
-            margin-bottom: 12px;
-            font-size: 20px;
-            font-weight: 600;
+            margin-bottom: 16px;
+            font-size: 22px;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .dashboard-card h3::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+            background: linear-gradient(90deg, #3182ce 0%, #38a169 100%);
+            border-radius: 2px;
         }
 
         .dashboard-card p {
             color: #718096;
-            font-size: 15px;
-            line-height: 1.5;
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .table {
@@ -403,7 +470,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="logo">Payroll Management System</div>
+            <div class="logo">MotoPH Payroll Management System</div>
             <div class="nav-buttons" id="header-buttons" style="display: none;">
                 <button class="btn btn-secondary" onclick="logout()">Logout</button>
             </div>
@@ -411,27 +478,36 @@
 
         <!-- Login Screen -->
         <div id="login" class="screen active">
-            <div style="max-width: 400px; margin: 0 auto; padding: 48px; background: white; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
-                <div style="text-align: center; margin-bottom: 40px;">
-                    <h1 style="font-size: 32px; font-weight: 700; color: #1a202c; margin: 0 0 8px 0;">Welcome Back</h1>
-                    <p style="color: #718096; font-size: 16px; margin: 0;">Sign in to your payroll management system</p>
+            <div style="max-width: 420px; margin: 0 auto; padding: 56px; background: white; border-radius: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.15); position: relative; z-index: 1;">
+                <div style="text-align: center; margin-bottom: 48px;">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #3182ce 0%, #38a169 100%); border-radius: 20px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(49, 130, 206, 0.3);">
+                        <span style="font-size: 36px; color: white;">🏢</span>
+                    </div>
+                    <h1 style="font-size: 36px; font-weight: 800; color: #1a202c; margin: 0 0 12px 0; letter-spacing: -0.5px;">Welcome Back</h1>
+                    <p style="color: #718096; font-size: 18px; margin: 0; font-weight: 400;">Sign in to MotoPH Payroll Management System</p>
                 </div>
                 <form onsubmit="handleLogin(event)">
                     <div class="form-group">
-                        <label for="email" style="font-weight: 600; color: #2d3748; margin-bottom: 8px; display: block;">Email Address</label>
-                        <input type="email" id="email" required style="width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; box-sizing: border-box;" placeholder="Enter your email">
+                        <label for="email" style="font-weight: 600; color: #2d3748; margin-bottom: 12px; display: block; font-size: 15px;">Email Address</label>
+                        <div style="position: relative;">
+                            <input type="email" id="email" required style="width: 100%; padding: 18px 20px 18px 50px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; transition: all 0.3s ease; box-sizing: border-box; background: #f8fafc;" placeholder="Enter your email address" onfocus="this.style.borderColor='#3182ce'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(49, 130, 206, 0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none'">
+                            <span style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #a0aec0; font-size: 18px;">📧</span>
+                        </div>
                     </div>
-                    <div class="form-group" style="margin-top: 24px;">
-                        <label for="password" style="font-weight: 600; color: #2d3748; margin-bottom: 8px; display: block;">Password</label>
-                        <input type="password" id="password" required style="width: 100%; padding: 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; transition: border-color 0.2s ease; box-sizing: border-box;" placeholder="Enter your password">
+                    <div class="form-group" style="margin-top: 28px;">
+                        <label for="password" style="font-weight: 600; color: #2d3748; margin-bottom: 12px; display: block; font-size: 15px;">Password</label>
+                        <div style="position: relative;">
+                            <input type="password" id="password" required style="width: 100%; padding: 18px 20px 18px 50px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; transition: all 0.3s ease; box-sizing: border-box; background: #f8fafc;" placeholder="Enter your password" onfocus="this.style.borderColor='#3182ce'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(49, 130, 206, 0.1)'" onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc'; this.style.boxShadow='none'">
+                            <span style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #a0aec0; font-size: 18px;">🔒</span>
+                        </div>
                     </div>
-                    <div class="form-group" style="margin-top: 24px; display: flex; align-items: center; justify-content: space-between;">
-                        <label style="display: flex; align-items: center; color: #4a5568; font-size: 14px; cursor: pointer;">
-                            <input type="checkbox" id="remember" style="margin-right: 8px;"> Remember me
+                    <div class="form-group" style="margin-top: 28px; display: flex; align-items: center; justify-content: space-between;">
+                        <label style="display: flex; align-items: center; color: #4a5568; font-size: 15px; cursor: pointer; font-weight: 500;">
+                            <input type="checkbox" id="remember" style="margin-right: 10px; width: 18px; height: 18px; accent-color: #3182ce;"> Remember me
                         </label>
-                        <a href="#" onclick="alert('Forgot password feature would be implemented here')" style="color: #3182ce; text-decoration: none; font-size: 14px; font-weight: 500;">Forgot Password?</a>
+                        <a href="#" onclick="alert('Forgot password feature would be implemented here')" style="color: #3182ce; text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s ease;" onmouseover="this.style.color='#2c5282'" onmouseout="this.style.color='#3182ce'">Forgot Password?</a>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 32px; padding: 16px; font-size: 16px; font-weight: 600;">Sign In</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 36px; padding: 18px; font-size: 17px; font-weight: 700; background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%); border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(49, 130, 206, 0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(49, 130, 206, 0.4)'">Sign In to MotoPH</button>
                 </form>
             </div>
         </div>
