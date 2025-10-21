@@ -1219,15 +1219,6 @@
                     </div>
                 </div>
                 
-                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
-                    <h3>Payment Information</h3>
-                    <p><strong>Payment Method:</strong> Direct Deposit</p>
-                    <p><strong>Bank:</strong> BDO (Banco de Oro)</p>
-                    <p><strong>Account:</strong> ****1234</p>
-                    <p><strong>Branch Code:</strong> 0010</p>
-                    <p><strong>Deposit Date:</strong> April 5, 2024</p>
-                    <p><strong>Reference No:</strong> PAY-2024-001</p>
-                </div>
             </div>
 
             <!-- Payslip Footer -->
@@ -2833,8 +2824,15 @@
                 </div>
             `;
             
+            // Remove any existing payment information to avoid duplicates
+            const existingPaymentInfo = document.querySelector('#employee-payslip .payment-info-section');
+            if (existingPaymentInfo) {
+                existingPaymentInfo.remove();
+            }
+            
             // Add payment information section
             const paymentInfo = document.createElement('div');
+            paymentInfo.className = 'payment-info-section';
             paymentInfo.style.cssText = 'background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-top: 20px;';
             paymentInfo.innerHTML = `
                 <h3>Payment Information</h3>
@@ -3626,15 +3624,27 @@ Leave Request Details (${leaveId}):
                 
                 console.log('Calculated totals:', { totalGrossPay, totalDeductions, netPay });
                 
-                // Update the payslip display
-                updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
+                // Show saving notification and disable save button
+                showNotification('💾 Saving changes...', 'success');
+                const saveButton = document.querySelector('#editPayslipModal .btn-warning');
+                const originalText = saveButton.textContent;
+                saveButton.textContent = '💾 Saving...';
+                saveButton.disabled = true;
                 
-                // Close modal and show success message
-                closeModal('editPayslipModal');
-                showNotification('✅ Payslip updated successfully!', 'success');
-                
-                // Log the edit reason
-                console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+                // Simulate a brief delay to show the saving process
+                setTimeout(() => {
+                    // Update the payslip display
+                    updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
+                    
+                    // Close modal
+                    closeModal('editPayslipModal');
+                    
+                    // Show success message with more details
+                    showNotification(`✅ Payslip updated successfully! Changes saved for ${document.getElementById('editEmployeeName').value.split('(')[0].trim()}`, 'success');
+                    
+                    // Log the edit reason
+                    console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+                }, 1000);
                 
             } catch (error) {
                 console.error('Error in savePayslipEdit:', error);
