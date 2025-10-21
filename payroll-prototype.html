@@ -552,6 +552,18 @@
                     <h3>Payslips</h3>
                     <p>View employee payslips</p>
                 </div>
+                <div class="dashboard-card" onclick="showScreen('employees')">
+                    <h3>Employee Management</h3>
+                    <p>Manage employee information and records</p>
+                </div>
+                <div class="dashboard-card" onclick="showScreen('reports')">
+                    <h3>Reports & Analytics</h3>
+                    <p>View payroll reports and insights</p>
+                </div>
+                <div class="dashboard-card" onclick="showScreen('leave-calendar')">
+                    <h3>Leave Calendar</h3>
+                    <p>Manage employee time-off and leave requests</p>
+                </div>
                 <div class="dashboard-card" onclick="showScreen('settings')">
                     <h3>Settings</h3>
                     <p>Configure system settings</p>
@@ -1067,6 +1079,444 @@
             </div>
             </div>
         </div>
+
+        <!-- Employee Management Screen -->
+        <div id="employees" class="screen">
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+                </div>
+                <div class="content-header">
+                    <h1>Employee Management</h1>
+                    <p>Manage employee information, salaries, and employment details</p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <div class="filters">
+                        <div class="form-group">
+                            <label for="employee-search">Search Employee:</label>
+                            <input type="text" id="employee-search" placeholder="Search by name, ID, or department..." onkeyup="filterEmployeeManagement()">
+                        </div>
+                        <div class="form-group">
+                            <label for="department-filter">Department:</label>
+                            <select id="department-filter" onchange="filterEmployeeManagement()">
+                                <option value="">All Departments</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Sales</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="addNewEmployee()">+ Add New Employee</button>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                            <th>Reporting Manager</th>
+                            <th>Basic Salary</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employee-management-list">
+                        <tr>
+                            <td>EMP-001</td>
+                            <td>John Smith</td>
+                            <td>Engineering</td>
+                            <td>Senior Developer</td>
+                            <td>Sarah Wilson (HR Manager)</td>
+                            <td>₱45,000.00</td>
+                            <td><span class="status-badge status-completed">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editEmployee('EMP-001')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewEmployeeDetails('EMP-001')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="adjustSalary('EMP-001')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-002</td>
+                            <td>Jane Doe</td>
+                            <td>Marketing</td>
+                            <td>Marketing Manager</td>
+                            <td>Sarah Wilson (HR Manager)</td>
+                            <td>₱38,000.00</td>
+                            <td><span class="status-badge status-completed">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editEmployee('EMP-002')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewEmployeeDetails('EMP-002')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="adjustSalary('EMP-002')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-003</td>
+                            <td>Mike Johnson</td>
+                            <td>Sales</td>
+                            <td>Sales Representative</td>
+                            <td>Jane Doe (Marketing Manager)</td>
+                            <td>₱32,000.00</td>
+                            <td><span class="status-badge status-completed">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editEmployee('EMP-003')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewEmployeeDetails('EMP-003')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="adjustSalary('EMP-003')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-004</td>
+                            <td>Sarah Wilson</td>
+                            <td>HR</td>
+                            <td>HR Manager</td>
+                            <td>CEO (Direct Report)</td>
+                            <td>₱50,000.00</td>
+                            <td><span class="status-badge status-completed">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editEmployee('EMP-004')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewEmployeeDetails('EMP-004')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="adjustSalary('EMP-004')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-005</td>
+                            <td>David Brown</td>
+                            <td>Finance</td>
+                            <td>Financial Analyst</td>
+                            <td>Sarah Wilson (HR Manager)</td>
+                            <td>₱42,000.00</td>
+                            <td><span class="status-badge status-completed">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editEmployee('EMP-005')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewEmployeeDetails('EMP-005')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="adjustSalary('EMP-005')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-006</td>
+                            <td>Lisa Garcia</td>
+                            <td>Engineering</td>
+                            <td>Frontend Developer</td>
+                            <td>John Smith (Senior Developer)</td>
+                            <td>₱40,000.00</td>
+                            <td><span class="status-badge status-completed">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editEmployee('EMP-006')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                                <button class="btn btn-secondary" onclick="viewEmployeeDetails('EMP-006')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="adjustSalary('EMP-006')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports & Analytics Screen -->
+        <div id="reports" class="screen">
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+                </div>
+                <div class="content-header">
+                    <h1>Reports & Analytics</h1>
+                    <p>Payroll insights, trends, and comprehensive reports</p>
+                </div>
+                
+                <div class="dashboard-grid" style="margin-bottom: 32px;">
+                    <div class="dashboard-card">
+                        <h3>Total Payroll Cost</h3>
+                        <p style="font-size: 24px; font-weight: 700; color: #3182ce; margin: 16px 0;">₱2,456,750.00</p>
+                        <p>March 2024</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Average Salary</h3>
+                        <p style="font-size: 24px; font-weight: 700; color: #38a169; margin: 16px 0;">₱40,945.83</p>
+                        <p>Per employee</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Tax Contributions</h3>
+                        <p style="font-size: 24px; font-weight: 700; color: #ed8936; margin: 16px 0;">₱245,675.00</p>
+                        <p>Total deductions</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Active Employees</h3>
+                        <p style="font-size: 24px; font-weight: 700; color: #e53e3e; margin: 16px 0;">6</p>
+                        <p>Currently employed</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                    <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+                        <h3 style="margin-bottom: 16px;">Department Breakdown</h3>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Engineering</span>
+                                <span>₱85,000</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #3182ce; height: 100%; width: 35%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Marketing</span>
+                                <span>₱38,000</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #38a169; height: 100%; width: 15%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Sales</span>
+                                <span>₱32,000</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #ed8936; height: 100%; width: 13%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>HR</span>
+                                <span>₱35,000</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #e53e3e; height: 100%; width: 14%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>Finance</span>
+                                <span>₱42,000</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #9f7aea; height: 100%; width: 17%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+                        <h3 style="margin-bottom: 16px;">Payroll Trends</h3>
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>January 2024</span>
+                                <span>₱2,234,500</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #3182ce; height: 100%; width: 85%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>February 2024</span>
+                                <span>₱2,345,200</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #38a169; height: 100%; width: 90%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span>March 2024</span>
+                                <span>₱2,456,750</span>
+                            </div>
+                            <div style="background: #e2e8f0; height: 8px; border-radius: 4px;">
+                                <div style="background: #ed8936; height: 100%; width: 100%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 16px; margin-top: 24px;">
+                    <button class="btn btn-primary" onclick="generatePayrollReport()">📊 Generate Payroll Report</button>
+                    <button class="btn btn-success" onclick="exportPayrollData()">📥 Export to Excel</button>
+                    <button class="btn btn-secondary" onclick="scheduleReport()">📅 Schedule Report</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leave Calendar Screen -->
+        <div id="leave-calendar" class="screen">
+            <div class="content">
+                <div class="back-btn">
+                    <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Back to Dashboard</button>
+                </div>
+                <div class="content-header">
+                    <h1>Leave Calendar</h1>
+                    <p>Manage employee time-off requests and track leave balances</p>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <div class="filters">
+                        <div class="form-group">
+                            <label for="leave-month">Month:</label>
+                            <select id="leave-month" onchange="updateLeaveCalendar()">
+                                <option value="2024-03">March 2024</option>
+                                <option value="2024-04">April 2024</option>
+                                <option value="2024-05">May 2024</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="leave-status">Status:</label>
+                            <select id="leave-status" onchange="filterLeaveRequests()">
+                                <option value="">All Requests</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="requestLeave()">+ Request Leave</button>
+                </div>
+
+                <!-- Leave Calendar Grid -->
+                <div style="background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); margin-bottom: 24px;">
+                    <h3 style="margin-bottom: 20px;">March 2024 Leave Calendar</h3>
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 16px;">
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Sun</div>
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Mon</div>
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Tue</div>
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Wed</div>
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Thu</div>
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Fri</div>
+                        <div style="text-align: center; font-weight: 600; padding: 8px; background: #f7fafc; border-radius: 4px;">Sat</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">25</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">26</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">27</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">28</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">29</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">1</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">2</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">3</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">4</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">5</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">6</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">7</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">8</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">9</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">10</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">11</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">12</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">13</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">14</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">15</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">16</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">17</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">18</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">19</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">20</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">21</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">22</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">23</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">24</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">25</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">26</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">27</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">28</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">29</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">30</div>
+                        <div style="text-align: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc;">31</div>
+                    </div>
+                </div>
+
+                <!-- Leave Requests Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leave-requests-list">
+                        <tr>
+                            <td>John Smith</td>
+                            <td>Vacation Leave</td>
+                            <td>March 15, 2024</td>
+                            <td>March 17, 2024</td>
+                            <td>3 days</td>
+                            <td><span class="status-badge status-completed">Approved</span></td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="viewLeaveDetails('LV-001')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-success" onclick="approveLeave('LV-001')" style="padding: 6px 12px; font-size: 12px;">✅ Approved</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jane Doe</td>
+                            <td>Sick Leave</td>
+                            <td>March 20, 2024</td>
+                            <td>March 20, 2024</td>
+                            <td>1 day</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="viewLeaveDetails('LV-002')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-primary" onclick="approveLeave('LV-002')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
+                                <button class="btn btn-danger" onclick="rejectLeave('LV-002')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mike Johnson</td>
+                            <td>Personal Leave</td>
+                            <td>March 25, 2024</td>
+                            <td>March 27, 2024</td>
+                            <td>3 days</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="viewLeaveDetails('LV-003')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-primary" onclick="approveLeave('LV-003')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
+                                <button class="btn btn-danger" onclick="rejectLeave('LV-003')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lisa Garcia</td>
+                            <td>Vacation Leave</td>
+                            <td>March 30, 2024</td>
+                            <td>April 2, 2024</td>
+                            <td>4 days</td>
+                            <td><span class="status-badge status-error">Rejected</span></td>
+                            <td>
+                                <button class="btn btn-secondary" onclick="viewLeaveDetails('LV-004')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                                <button class="btn btn-warning" onclick="reconsiderLeave('LV-004')" style="padding: 6px 12px; font-size: 12px;">🔄 Reconsider</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Leave Balances Summary -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: center;">
+                        <h4 style="margin: 0 0 8px 0; color: #3182ce;">Total Leave Days</h4>
+                        <p style="font-size: 24px; font-weight: 700; color: #3182ce; margin: 0;">15 days</p>
+                        <p style="color: #718096; margin: 4px 0 0 0;">Per employee annually</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: center;">
+                        <h4 style="margin: 0 0 8px 0; color: #38a169;">Used This Year</h4>
+                        <p style="font-size: 24px; font-weight: 700; color: #38a169; margin: 0;">8.5 days</p>
+                        <p style="color: #718096; margin: 4px 0 0 0;">Average per employee</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: center;">
+                        <h4 style="margin: 0 0 8px 0; color: #ed8936;">Pending Requests</h4>
+                        <p style="font-size: 24px; font-weight: 700; color: #ed8936; margin: 0;">3</p>
+                        <p style="color: #718096; margin: 4px 0 0 0;">Awaiting approval</p>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: center;">
+                        <h4 style="margin: 0 0 8px 0; color: #e53e3e;">Sick Leave</h4>
+                        <p style="font-size: 24px; font-weight: 700; color: #e53e3e; margin: 0;">5 days</p>
+                        <p style="color: #718096; margin: 4px 0 0 0;">Available per employee</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1556,6 +2006,300 @@
                 
                 row.style.display = showRow ? '' : 'none';
             });
+        }
+
+        // Employee Management Functions
+        function filterEmployeeManagement() {
+            const searchTerm = document.getElementById('employee-search').value.toLowerCase();
+            const departmentFilter = document.getElementById('department-filter').value;
+            const table = document.querySelector('#employee-management-list');
+            const rows = table.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const nameCell = row.cells[1];
+                const departmentCell = row.cells[2];
+                const idCell = row.cells[0];
+                
+                let showRow = true;
+                
+                if (searchTerm) {
+                    const searchText = (nameCell.textContent + ' ' + idCell.textContent).toLowerCase();
+                    if (!searchText.includes(searchTerm)) {
+                        showRow = false;
+                    }
+                }
+                
+                if (departmentFilter && departmentCell.textContent.trim() !== departmentFilter) {
+                    showRow = false;
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+
+        function editEmployee(employeeId) {
+            const employeeData = getEmployeeData(employeeId);
+            const newName = prompt(`Edit employee name:`, employeeData.name || 'John Smith');
+            const newDepartment = prompt(`Edit department:`, employeeData.department || 'Engineering');
+            const newPosition = prompt(`Edit position:`, employeeData.position || 'Senior Developer');
+            
+            if (newName && newDepartment && newPosition) {
+                alert(`Employee ${employeeId} information updated successfully!\n\nName: ${newName}\nDepartment: ${newDepartment}\nPosition: ${newPosition}`);
+                
+                // Update the table row
+                const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
+                if (row) {
+                    row.cells[1].textContent = newName;
+                    row.cells[2].textContent = newDepartment;
+                    row.cells[3].textContent = newPosition;
+                }
+            }
+        }
+
+        function viewEmployeeDetails(employeeId) {
+            const employeeData = getEmployeeData(employeeId);
+            const details = `
+Employee Details for ${employeeId}:
+
+👤 Personal Information:
+• Name: ${employeeData.name || 'John Smith'}
+• Department: ${employeeData.department || 'Engineering'}
+• Position: ${employeeData.position || 'Senior Developer'}
+• Hire Date: ${employeeData.hireDate || 'January 15, 2022'}
+• Pay Grade: ${employeeData.payGrade || 'P5'}
+
+💰 Compensation:
+• Basic Salary: ₱${employeeData.basicSalary?.toLocaleString() || '45,000'}
+• Payment Method: ${employeeData.paymentMethod || 'Bank Transfer - BDO'}
+
+📊 Performance:
+• Status: Active
+• Last Review: March 2024
+• Performance Rating: Excellent
+            `;
+            
+            alert(details);
+        }
+
+        function adjustSalary(employeeId) {
+            const currentSalary = prompt(`Enter new basic salary for ${employeeId}:`, '45000');
+            if (currentSalary && !isNaN(currentSalary)) {
+                const newSalary = parseFloat(currentSalary);
+                if (confirm(`Are you sure you want to update the salary to ₱${newSalary.toLocaleString()}?`)) {
+                    alert(`Salary updated successfully for ${employeeId}!\nNew Basic Salary: ₱${newSalary.toLocaleString()}`);
+                    
+                    // Update the table row
+                    const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
+                    if (row) {
+                        row.cells[4].textContent = `₱${newSalary.toLocaleString()}.00`;
+                    }
+                }
+            }
+        }
+
+        function addNewEmployee() {
+            const name = prompt('Enter employee name:');
+            const department = prompt('Enter department:');
+            const position = prompt('Enter position:');
+            const salary = prompt('Enter basic salary:');
+            
+            if (name && department && position && salary) {
+                const newId = 'EMP-' + String(Date.now()).slice(-3);
+                const table = document.querySelector('#employee-management-list');
+                const newRow = table.insertRow();
+                
+                newRow.innerHTML = `
+                    <td>${newId}</td>
+                    <td>${name}</td>
+                    <td>${department}</td>
+                    <td>${position}</td>
+                    <td>₱${parseFloat(salary).toLocaleString()}.00</td>
+                    <td><span class="status-badge status-completed">Active</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editEmployee('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                        <button class="btn btn-secondary" onclick="viewEmployeeDetails('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                        <button class="btn btn-warning" onclick="adjustSalary('${newId}')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                    </td>
+                `;
+                
+                alert(`New employee added successfully!\nEmployee ID: ${newId}\nName: ${name}`);
+            }
+        }
+
+        // Reports & Analytics Functions
+        function generatePayrollReport() {
+            alert('📊 Payroll Report Generated!\n\nReport includes:\n• Total payroll costs\n• Department breakdown\n• Tax contributions\n• Employee statistics\n\nReport has been saved to your downloads folder.');
+        }
+
+        function exportPayrollData() {
+            alert('📥 Exporting Payroll Data to Excel...\n\nExport includes:\n• Employee information\n• Salary details\n• Payroll history\n• Tax calculations\n\nFile will be downloaded as "payroll_data_export.xlsx"');
+        }
+
+        function scheduleReport() {
+            const frequency = prompt('Select report frequency:\n1. Weekly\n2. Monthly\n3. Quarterly\n\nEnter number (1-3):');
+            if (frequency) {
+                const frequencies = ['Weekly', 'Monthly', 'Quarterly'];
+                alert(`📅 Report scheduled for ${frequencies[frequency-1]} delivery!\n\nYou will receive automated payroll reports via email.`);
+            }
+        }
+
+        // Leave Calendar Functions
+        function updateLeaveCalendar() {
+            const selectedMonth = document.getElementById('leave-month').value;
+            alert(`📅 Calendar updated for ${selectedMonth}!\n\nLeave calendar will show all approved and pending leave requests for the selected month.`);
+        }
+
+        function filterLeaveRequests() {
+            const statusFilter = document.getElementById('leave-status').value;
+            const table = document.querySelector('#leave-requests-list');
+            const rows = table.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const statusCell = row.cells[5]; // Status column
+                
+                let showRow = true;
+                
+                if (statusFilter) {
+                    const statusText = statusCell.textContent.trim().toLowerCase();
+                    const statusMatch = 
+                        (statusFilter === 'approved' && statusText.includes('approved')) ||
+                        (statusFilter === 'pending' && statusText.includes('pending')) ||
+                        (statusFilter === 'rejected' && statusText.includes('rejected'));
+                    
+                    if (!statusMatch) {
+                        showRow = false;
+                    }
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+
+        function requestLeave() {
+            const employee = prompt('Employee requesting leave:');
+            const leaveType = prompt('Leave type (Vacation/Sick/Personal):');
+            const startDate = prompt('Start date (MM/DD/YYYY):');
+            const endDate = prompt('End date (MM/DD/YYYY):');
+            const reason = prompt('Reason for leave:');
+            
+            if (employee && leaveType && startDate && endDate && reason) {
+                const newId = 'LV-' + String(Date.now()).slice(-3);
+                const table = document.querySelector('#leave-requests-list');
+                const newRow = table.insertRow();
+                
+                // Calculate days
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                
+                newRow.innerHTML = `
+                    <td>${employee}</td>
+                    <td>${leaveType} Leave</td>
+                    <td>${startDate}</td>
+                    <td>${endDate}</td>
+                    <td>${days} days</td>
+                    <td><span class="status-badge status-pending">Pending</span></td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                        <button class="btn btn-primary" onclick="approveLeave('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
+                        <button class="btn btn-danger" onclick="rejectLeave('${newId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
+                    </td>
+                `;
+                
+                alert(`✅ Leave request submitted!\n\nRequest ID: ${newId}\nEmployee: ${employee}\nLeave Type: ${leaveType}\nDuration: ${days} days\n\nRequest is now pending approval.`);
+            }
+        }
+
+        function viewLeaveDetails(leaveId) {
+            const details = `
+Leave Request Details (${leaveId}):
+
+👤 Employee Information:
+• Name: John Smith
+• Department: Engineering
+• Position: Senior Developer
+• Reporting Manager: Sarah Wilson
+
+📅 Leave Details:
+• Leave Type: Vacation Leave
+• Start Date: March 15, 2024
+• End Date: March 17, 2024
+• Duration: 3 days
+• Reason: Family vacation
+
+📊 Leave Balance:
+• Total Annual Leave: 15 days
+• Used This Year: 8 days
+• Remaining: 7 days
+
+📋 Status: Pending Approval
+• Submitted: March 10, 2024
+• Last Updated: March 10, 2024
+            `;
+            
+            alert(details);
+        }
+
+        function approveLeave(leaveId) {
+            if (confirm(`Are you sure you want to approve leave request ${leaveId}?`)) {
+                alert(`✅ Leave request ${leaveId} approved!\n\nThe employee has been notified and the leave has been added to the calendar.`);
+                
+                // Update the status in the table
+                const row = document.querySelector(`tr:has(td:contains("${leaveId}"))`);
+                if (row) {
+                    const statusCell = row.cells[5];
+                    statusCell.innerHTML = '<span class="status-badge status-completed">Approved</span>';
+                    
+                    // Update action buttons
+                    const actionCell = row.cells[6];
+                    actionCell.innerHTML = `
+                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                        <button class="btn btn-success" onclick="approveLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">✅ Approved</button>
+                    `;
+                }
+            }
+        }
+
+        function rejectLeave(leaveId) {
+            const reason = prompt(`Please provide a reason for rejecting leave request ${leaveId}:`);
+            if (reason) {
+                alert(`❌ Leave request ${leaveId} rejected!\n\nReason: ${reason}\n\nThe employee has been notified of the rejection.`);
+                
+                // Update the status in the table
+                const row = document.querySelector(`tr:has(td:contains("${leaveId}"))`);
+                if (row) {
+                    const statusCell = row.cells[5];
+                    statusCell.innerHTML = '<span class="status-badge status-error">Rejected</span>';
+                    
+                    // Update action buttons
+                    const actionCell = row.cells[6];
+                    actionCell.innerHTML = `
+                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                        <button class="btn btn-warning" onclick="reconsiderLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">🔄 Reconsider</button>
+                    `;
+                }
+            }
+        }
+
+        function reconsiderLeave(leaveId) {
+            if (confirm(`Are you sure you want to reconsider leave request ${leaveId}? This will change its status back to pending.`)) {
+                alert(`🔄 Leave request ${leaveId} is now under reconsideration!\n\nThe request has been moved back to pending status for review.`);
+                
+                // Update the status in the table
+                const row = document.querySelector(`tr:has(td:contains("${leaveId}"))`);
+                if (row) {
+                    const statusCell = row.cells[5];
+                    statusCell.innerHTML = '<span class="status-badge status-pending">Pending</span>';
+                    
+                    // Update action buttons
+                    const actionCell = row.cells[6];
+                    actionCell.innerHTML = `
+                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                        <button class="btn btn-primary" onclick="approveLeave('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
+                        <button class="btn btn-danger" onclick="rejectLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
+                    `;
+                }
+            }
         }
 
         // Payslip functions
