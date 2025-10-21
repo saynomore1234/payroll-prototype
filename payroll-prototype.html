@@ -2952,7 +2952,7 @@
             showNotification(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`, 'success');
             
             // Update the status in the table - find row by employee ID
-            const table = document.querySelector('#employee-list tbody');
+            const table = document.querySelector('#employee-list');
             if (!table) {
                 console.error('Employee list table not found');
                 return;
@@ -2976,13 +2976,34 @@
                         console.log('Updated status badge to Complete');
                     }
                     
-                    // Remove the fix button
-                    const fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
+                    // Remove the fix button - try multiple selectors
+                    let fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
+                    if (!fixButton) {
+                        // Try alternative selector
+                        fixButton = row.querySelector('button.btn-warning');
+                    }
+                    if (!fixButton) {
+                        // Try by text content
+                        const allButtons = row.querySelectorAll('button');
+                        allButtons.forEach(btn => {
+                            if (btn.textContent.includes('Fix Error')) {
+                                fixButton = btn;
+                            }
+                        });
+                    }
+                    
                     if (fixButton) {
+                        console.log('Found fix button, removing it...');
                         fixButton.remove();
                         console.log('Successfully removed fix button');
                     } else {
                         console.log('Fix button not found in row');
+                        // Debug: show all buttons in row
+                        const allButtons = row.querySelectorAll('button');
+                        console.log('All buttons in row:', allButtons.length);
+                        allButtons.forEach((btn, idx) => {
+                            console.log(`Button ${idx}:`, btn.textContent, btn.onclick);
+                        });
                     }
                 }
             });
@@ -3760,38 +3781,92 @@ Leave Request Details (${leaveId}):
         }
 
         function updatePayslipDisplay(data, overtimePay, totalGrossPay, totalDeductions, netPay) {
-            // Update earnings section
-            document.querySelector('#employee-payslip .salary-item:nth-child(2) span:last-child').textContent = `₱${data.basicSalary.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(3) span:first-child').textContent = `Overtime (${data.overtimeHours} hrs @ ₱156.25):`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(3) span:last-child').textContent = `₱${overtimePay.toFixed(2)}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(4) span:last-child').textContent = `₱${data.performanceBonus.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(5) span:last-child').textContent = `₱${data.projectIncentive.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(6) span:last-child').textContent = `₱${data.thirteenthMonth.toFixed(2)}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(7) span:last-child').textContent = `₱${totalGrossPay.toFixed(2)}`;
+            console.log('Updating payslip display with new data:', data);
             
-            // Update government contributions
-            document.querySelector('#employee-payslip .salary-item:nth-child(8) span:last-child').textContent = `-₱${data.sss.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(9) span:last-child').textContent = `-₱${data.philhealth.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(10) span:last-child').textContent = `-₱${data.pagibig.toLocaleString()}`;
-            
-            // Update tax and other deductions
-            document.querySelector('#employee-payslip .salary-item:nth-child(12) span:last-child').textContent = `-₱${data.withholdingTax.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(13) span:last-child').textContent = `-₱${data.healthInsurance.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(14) span:last-child').textContent = `-₱${data.lifeInsurance.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(15) span:last-child').textContent = `-₱${data.loanDeduction.toLocaleString()}`;
-            document.querySelector('#employee-payslip .salary-item:nth-child(16) span:last-child').textContent = `-₱${totalDeductions.toFixed(2)}`;
-            
-            // Update net pay
-            document.querySelector('#employee-payslip .salary-item:nth-child(17) span:last-child').textContent = `₱${netPay.toFixed(2)}`;
-            
-            // Update YTD summary (simulate some changes)
-            const ytdGross = parseFloat(document.querySelector('#employee-payslip .ytd-item:nth-child(2) span:last-child').textContent.replace('₱', '').replace(',', '')) + (totalGrossPay - 31364.58);
-            const ytdDeductions = parseFloat(document.querySelector('#employee-payslip .ytd-item:nth-child(3) span:last-child').textContent.replace('₱', '').replace(',', '')) + (totalDeductions - 8964.58);
-            const ytdNet = ytdGross - ytdDeductions;
-            
-            document.querySelector('#employee-payslip .ytd-item:nth-child(2) span:last-child').textContent = `₱${ytdGross.toFixed(2)}`;
-            document.querySelector('#employee-payslip .ytd-item:nth-child(3) span:last-child').textContent = `₱${ytdDeductions.toFixed(2)}`;
-            document.querySelector('#employee-payslip .ytd-item:nth-child(4) span:last-child').textContent = `₱${ytdNet.toFixed(2)}`;
+            try {
+                // Find the salary breakdown section
+                const salaryBreakdown = document.querySelector('#employee-payslip .salary-breakdown');
+                if (!salaryBreakdown) {
+                    console.error('Salary breakdown section not found');
+                    return;
+                }
+                
+                // Update the entire salary breakdown with new data
+                salaryBreakdown.innerHTML = `
+                    <h3>Earnings</h3>
+                    <div class="salary-item">
+                        <span>Basic Salary:</span>
+                        <span>₱${data.basicSalary.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Overtime (${data.overtimeHours} hrs @ ₱${(data.basicSalary / 8 * 1.25).toFixed(2)}):</span>
+                        <span>₱${overtimePay.toFixed(2)}</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Performance Bonus:</span>
+                        <span>₱${data.performanceBonus.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Project Incentive:</span>
+                        <span>₱${data.projectIncentive.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>13th Month Pay:</span>
+                        <span>₱${data.thirteenthMonth.toFixed(2)}</span>
+                    </div>
+                    <div class="salary-item total-gross">
+                        <span><strong>Total Gross Pay:</strong></span>
+                        <span><strong>₱${totalGrossPay.toFixed(2)}</strong></span>
+                    </div>
+
+                    <h3>Government Mandatory Contributions</h3>
+                    <div class="salary-item">
+                        <span>SSS:</span>
+                        <span>-₱${data.sss.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>PhilHealth:</span>
+                        <span>-₱${data.philhealth.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Pag-IBIG:</span>
+                        <span>-₱${data.pagibig.toLocaleString()}.00</span>
+                    </div>
+
+                    <h3>Tax & Other Deductions</h3>
+                    <div class="salary-item">
+                        <span>Withholding Tax (BIR):</span>
+                        <span>-₱${data.withholdingTax.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Health Insurance (HMO):</span>
+                        <span>-₱${data.healthInsurance.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Life Insurance:</span>
+                        <span>-₱${data.lifeInsurance.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Loan Deduction:</span>
+                        <span>-₱${data.loanDeduction.toLocaleString()}.00</span>
+                    </div>
+                    <div class="salary-item total-deductions">
+                        <span><strong>Total Deductions:</strong></span>
+                        <span><strong>₱${totalDeductions.toFixed(2)}</strong></span>
+                    </div>
+
+                    <div class="salary-item net-pay">
+                        <span><strong>NET PAY:</strong></span>
+                        <span><strong>₱${netPay.toFixed(2)}</strong></span>
+                    </div>
+                `;
+                
+                console.log('Successfully updated salary breakdown');
+                
+            } catch (error) {
+                console.error('Error updating payslip display:', error);
+                throw error; // Re-throw to be caught by the calling function
+            }
         }
 
         // Close modals when clicking outside
