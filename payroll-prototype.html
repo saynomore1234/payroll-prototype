@@ -2508,7 +2508,13 @@
                     regularHours: 40,
                     overtimeHours: 5,
                     hasError: true,
-                    errorMessage: 'Overtime calculation mismatch - hours exceed maximum allowed'
+                    errorMessage: 'Overtime calculation mismatch - hours exceed maximum allowed',
+                    bankDetails: {
+                        bank: 'BDO (Banco de Oro)',
+                        account: '****1234',
+                        branchCode: '0010',
+                        referenceNo: 'PAY-2024-001'
+                    }
                 },
                 'EMP-002': {
                     basicSalary: 38000,
@@ -2530,7 +2536,13 @@
                     regularHours: 40,
                     overtimeHours: 0,
                     hasError: false,
-                    errorMessage: ''
+                    errorMessage: '',
+                    bankDetails: {
+                        bank: 'Metrobank',
+                        account: '****5678',
+                        branchCode: '0020',
+                        referenceNo: 'PAY-2024-002'
+                    }
                 },
                 'EMP-003': {
                     basicSalary: 32000,
@@ -2552,7 +2564,13 @@
                     regularHours: 40,
                     overtimeHours: 10,
                     hasError: true,
-                    errorMessage: 'Commission calculation error - missing sales data'
+                    errorMessage: 'Commission calculation error - missing sales data',
+                    bankDetails: {
+                        bank: 'N/A (Cash Payment)',
+                        account: 'N/A',
+                        branchCode: 'N/A',
+                        referenceNo: 'CASH-2024-003'
+                    }
                 },
                 'EMP-004': {
                     basicSalary: 35000,
@@ -2574,7 +2592,13 @@
                     regularHours: 40,
                     overtimeHours: 0,
                     hasError: false,
-                    errorMessage: ''
+                    errorMessage: '',
+                    bankDetails: {
+                        bank: 'BPI (Bank of the Philippine Islands)',
+                        account: '****9012',
+                        branchCode: '0030',
+                        referenceNo: 'PAY-2024-004'
+                    }
                 },
                 'EMP-005': {
                     basicSalary: 42000,
@@ -2596,7 +2620,13 @@
                     regularHours: 40,
                     overtimeHours: 2,
                     hasError: true,
-                    errorMessage: 'Tax computation error - incorrect BIR bracket applied'
+                    errorMessage: 'Tax computation error - incorrect BIR bracket applied',
+                    bankDetails: {
+                        bank: 'Security Bank',
+                        account: '****3456',
+                        branchCode: '0040',
+                        referenceNo: 'PAY-2024-005'
+                    }
                 },
                 'EMP-006': {
                     basicSalary: 40000,
@@ -2618,7 +2648,13 @@
                     regularHours: 40,
                     overtimeHours: 0,
                     hasError: false,
-                    errorMessage: ''
+                    errorMessage: '',
+                    bankDetails: {
+                        bank: 'UnionBank',
+                        account: '****7890',
+                        branchCode: '0050',
+                        referenceNo: 'PAY-2024-006'
+                    }
                 }
             };
             return employeeData[employeeId] || employeeData['EMP-001'];
@@ -2703,6 +2739,22 @@
                     <span><strong>₱${netPay.toLocaleString()}.00</strong></span>
                 </div>
             `;
+            
+            // Add payment information section
+            const paymentInfo = document.createElement('div');
+            paymentInfo.style.cssText = 'background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-top: 20px;';
+            paymentInfo.innerHTML = `
+                <h3>Payment Information</h3>
+                <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
+                <p><strong>Bank:</strong> ${employeeData.bankDetails.bank}</p>
+                <p><strong>Account:</strong> ${employeeData.bankDetails.account}</p>
+                <p><strong>Branch Code:</strong> ${employeeData.bankDetails.branchCode}</p>
+                <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                <p><strong>Reference No:</strong> ${employeeData.bankDetails.referenceNo}</p>
+            `;
+            
+            // Insert payment information after the salary breakdown
+            salaryBreakdown.parentNode.insertBefore(paymentInfo, salaryBreakdown.nextSibling);
         }
 
         // Fix employee error function
@@ -3404,55 +3456,97 @@ Leave Request Details (${leaveId}):
         }
 
         function savePayslipEdit() {
+            console.log('savePayslipEdit function called');
+            
             // Get form values
             const form = document.getElementById('editPayslipForm');
-            const formData = new FormData(form);
+            if (!form) {
+                showNotification('Form not found', 'error');
+                return;
+            }
             
-            // Validate required fields
-            const requiredFields = ['editBasicSalary', 'editOvertimeHours', 'editPerformanceBonus', 'editProjectIncentive', 'editThirteenthMonth', 'editSSS', 'editPhilHealth', 'editPagIBIG', 'editWithholdingTax', 'editHealthInsurance', 'editLifeInsurance', 'editLoanDeduction', 'editReason'];
+            // Validate required fields with specific field names
+            const fieldMappings = {
+                'editBasicSalary': 'Basic Salary',
+                'editOvertimeHours': 'Overtime Hours',
+                'editPerformanceBonus': 'Performance Bonus',
+                'editProjectIncentive': 'Project Incentive',
+                'editThirteenthMonth': '13th Month Pay',
+                'editSSS': 'SSS Contribution',
+                'editPhilHealth': 'PhilHealth',
+                'editPagIBIG': 'Pag-IBIG',
+                'editWithholdingTax': 'Withholding Tax',
+                'editHealthInsurance': 'Health Insurance',
+                'editLifeInsurance': 'Life Insurance',
+                'editLoanDeduction': 'Loan Deduction',
+                'editReason': 'Reason for Edit'
+            };
             
-            for (let field of requiredFields) {
-                if (!document.getElementById(field).value.trim()) {
-                    showNotification(`Please fill in all required fields`, 'error');
+            for (let [fieldId, fieldName] of Object.entries(fieldMappings)) {
+                const field = document.getElementById(fieldId);
+                if (!field || !field.value.trim()) {
+                    showNotification(`Please fill in: ${fieldName}`, 'error');
+                    field.style.borderColor = '#e53e3e';
+                    field.focus();
                     return;
+                } else {
+                    field.style.borderColor = '';
                 }
             }
             
-            // Get the new values
-            const newData = {
-                basicSalary: parseFloat(document.getElementById('editBasicSalary').value),
-                overtimeHours: parseFloat(document.getElementById('editOvertimeHours').value),
-                performanceBonus: parseFloat(document.getElementById('editPerformanceBonus').value),
-                projectIncentive: parseFloat(document.getElementById('editProjectIncentive').value),
-                thirteenthMonth: parseFloat(document.getElementById('editThirteenthMonth').value),
-                sss: parseFloat(document.getElementById('editSSS').value),
-                philhealth: parseFloat(document.getElementById('editPhilHealth').value),
-                pagibig: parseFloat(document.getElementById('editPagIBIG').value),
-                withholdingTax: parseFloat(document.getElementById('editWithholdingTax').value),
-                healthInsurance: parseFloat(document.getElementById('editHealthInsurance').value),
-                lifeInsurance: parseFloat(document.getElementById('editLifeInsurance').value),
-                loanDeduction: parseFloat(document.getElementById('editLoanDeduction').value),
-                reason: document.getElementById('editReason').value
-            };
-            
-            // Calculate overtime pay (assuming ₱156.25 per hour)
-            const overtimeRate = 156.25;
-            const overtimePay = newData.overtimeHours * overtimeRate;
-            
-            // Calculate totals
-            const totalGrossPay = newData.basicSalary + overtimePay + newData.performanceBonus + newData.projectIncentive + newData.thirteenthMonth;
-            const totalDeductions = newData.sss + newData.philhealth + newData.pagibig + newData.withholdingTax + newData.healthInsurance + newData.lifeInsurance + newData.loanDeduction;
-            const netPay = totalGrossPay - totalDeductions;
-            
-            // Update the payslip display
-            updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
-            
-            // Close modal and show success message
-            closeModal('editPayslipModal');
-            showNotification('✅ Payslip updated successfully!', 'success');
-            
-            // Log the edit reason
-            console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+            try {
+                // Get the new values
+                const newData = {
+                    basicSalary: parseFloat(document.getElementById('editBasicSalary').value),
+                    overtimeHours: parseFloat(document.getElementById('editOvertimeHours').value),
+                    performanceBonus: parseFloat(document.getElementById('editPerformanceBonus').value),
+                    projectIncentive: parseFloat(document.getElementById('editProjectIncentive').value),
+                    thirteenthMonth: parseFloat(document.getElementById('editThirteenthMonth').value),
+                    sss: parseFloat(document.getElementById('editSSS').value),
+                    philhealth: parseFloat(document.getElementById('editPhilHealth').value),
+                    pagibig: parseFloat(document.getElementById('editPagIBIG').value),
+                    withholdingTax: parseFloat(document.getElementById('editWithholdingTax').value),
+                    healthInsurance: parseFloat(document.getElementById('editHealthInsurance').value),
+                    lifeInsurance: parseFloat(document.getElementById('editLifeInsurance').value),
+                    loanDeduction: parseFloat(document.getElementById('editLoanDeduction').value),
+                    reason: document.getElementById('editReason').value
+                };
+                
+                console.log('New data:', newData);
+                
+                // Validate numeric values
+                for (let [key, value] of Object.entries(newData)) {
+                    if (key !== 'reason' && (isNaN(value) || value < 0)) {
+                        showNotification(`Invalid value for ${fieldMappings[`edit${key.charAt(0).toUpperCase() + key.slice(1)}`] || key}. Please enter a valid number.`, 'error');
+                        return;
+                    }
+                }
+                
+                // Calculate overtime pay (assuming ₱156.25 per hour)
+                const overtimeRate = 156.25;
+                const overtimePay = newData.overtimeHours * overtimeRate;
+                
+                // Calculate totals
+                const totalGrossPay = newData.basicSalary + overtimePay + newData.performanceBonus + newData.projectIncentive + newData.thirteenthMonth;
+                const totalDeductions = newData.sss + newData.philhealth + newData.pagibig + newData.withholdingTax + newData.healthInsurance + newData.lifeInsurance + newData.loanDeduction;
+                const netPay = totalGrossPay - totalDeductions;
+                
+                console.log('Calculated totals:', { totalGrossPay, totalDeductions, netPay });
+                
+                // Update the payslip display
+                updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
+                
+                // Close modal and show success message
+                closeModal('editPayslipModal');
+                showNotification('✅ Payslip updated successfully!', 'success');
+                
+                // Log the edit reason
+                console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+                
+            } catch (error) {
+                console.error('Error in savePayslipEdit:', error);
+                showNotification('Error saving payslip: ' + error.message, 'error');
+            }
         }
 
         function updatePayslipDisplay(data, overtimePay, totalGrossPay, totalDeductions, netPay) {
