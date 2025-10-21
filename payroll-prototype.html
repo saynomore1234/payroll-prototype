@@ -1186,11 +1186,21 @@
                         <span><strong>NET PAY:</strong></span>
                         <span><strong>₱25,539.58</strong></span>
                     </div>
+
+                    <h3 style="margin-top: 30px;">Payment Information</h3>
+                    <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <p><strong>Payment Method:</strong> Direct Deposit</p>
+                        <p><strong>Bank:</strong> BDO (Banco de Oro)</p>
+                        <p><strong>Account:</strong> ****1234</p>
+                        <p><strong>Branch Code:</strong> 0010</p>
+                        <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                        <p><strong>Reference No:</strong> PAY-2024-001</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Additional Payslip Information -->
-            <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Year-to-Date Summary -->
+            <div style="margin-top: 20px;">
                 <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
                     <h3>Year-to-Date Summary</h3>
                     <div class="salary-item">
@@ -1218,7 +1228,6 @@
                         <span>₱76,618.74</span>
                     </div>
                 </div>
-                
             </div>
 
             <!-- Payslip Footer -->
@@ -2822,30 +2831,17 @@
                     <span><strong>NET PAY:</strong></span>
                     <span><strong>₱${netPay.toLocaleString()}.00</strong></span>
                 </div>
+
+                <h3 style="margin-top: 30px;">Payment Information</h3>
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
+                    <p><strong>Bank:</strong> ${employeeData.bankDetails.bank}</p>
+                    <p><strong>Account:</strong> ${employeeData.bankDetails.account}</p>
+                    <p><strong>Branch Code:</strong> ${employeeData.bankDetails.branchCode}</p>
+                    <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                    <p><strong>Reference No:</strong> ${employeeData.bankDetails.referenceNo}</p>
+                </div>
             `;
-            
-            // Remove any existing payment information to avoid duplicates
-            const existingPaymentInfo = document.querySelector('#employee-payslip .payment-info-section');
-            if (existingPaymentInfo) {
-                existingPaymentInfo.remove();
-            }
-            
-            // Add payment information section
-            const paymentInfo = document.createElement('div');
-            paymentInfo.className = 'payment-info-section';
-            paymentInfo.style.cssText = 'background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px; margin-top: 20px;';
-            paymentInfo.innerHTML = `
-                <h3>Payment Information</h3>
-                <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
-                <p><strong>Bank:</strong> ${employeeData.bankDetails.bank}</p>
-                <p><strong>Account:</strong> ${employeeData.bankDetails.account}</p>
-                <p><strong>Branch Code:</strong> ${employeeData.bankDetails.branchCode}</p>
-                <p><strong>Deposit Date:</strong> April 5, 2024</p>
-                <p><strong>Reference No:</strong> ${employeeData.bankDetails.referenceNo}</p>
-            `;
-            
-            // Insert payment information after the salary breakdown
-            salaryBreakdown.parentNode.insertBefore(paymentInfo, salaryBreakdown.nextSibling);
         }
 
         // Fix employee error function
@@ -3633,17 +3629,24 @@ Leave Request Details (${leaveId}):
                 
                 // Simulate a brief delay to show the saving process
                 setTimeout(() => {
-                    // Update the payslip display
-                    updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
-                    
-                    // Close modal
-                    closeModal('editPayslipModal');
-                    
-                    // Show success message with more details
-                    showNotification(`✅ Payslip updated successfully! Changes saved for ${document.getElementById('editEmployeeName').value.split('(')[0].trim()}`, 'success');
-                    
-                    // Log the edit reason
-                    console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+                    try {
+                        // Update the payslip display
+                        updatePayslipDisplay(newData, overtimePay, totalGrossPay, totalDeductions, netPay);
+                        
+                        // Close modal
+                        closeModal('editPayslipModal');
+                        
+                        // Show success message with more details
+                        showNotification(`✅ Payslip updated successfully! Changes saved for ${document.getElementById('editEmployeeName').value.split('(')[0].trim()}`, 'success');
+                        
+                        // Log the edit reason
+                        console.log(`Payslip manually edited for ${document.getElementById('editEmployeeName').value}. Reason: ${newData.reason}`);
+                    } catch (error) {
+                        // Reset button state on error
+                        saveButton.textContent = originalText;
+                        saveButton.disabled = false;
+                        showNotification('Error updating payslip: ' + error.message, 'error');
+                    }
                 }, 1000);
                 
             } catch (error) {
