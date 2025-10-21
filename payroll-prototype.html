@@ -356,6 +356,142 @@
             background: #f8fafc;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 24px 32px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #1a202c;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .close {
+            color: #a0aec0;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close:hover {
+            color: #e53e3e;
+        }
+
+        .modal-body {
+            padding: 24px 32px;
+        }
+
+        .modal-footer {
+            padding: 16px 32px 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         .error-row {
             background: #ffebee !important;
             border-left: 4px solid #e74c3c;
@@ -1519,7 +1655,334 @@
         </div>
     </div>
 
+    <!-- Modals -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Edit Employee</h2>
+                <span class="close" onclick="closeModal('employeeModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="empName">Full Name</label>
+                            <input type="text" id="empName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empId">Employee ID</label>
+                            <input type="text" id="empId" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="empDepartment">Department</label>
+                            <select id="empDepartment" required>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Sales</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPosition">Position</label>
+                            <input type="text" id="empPosition" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="empManager">Reporting Manager</label>
+                            <select id="empManager" required>
+                                <option value="Sarah Wilson (HR Manager)">Sarah Wilson (HR Manager)</option>
+                                <option value="John Smith (Senior Developer)">John Smith (Senior Developer)</option>
+                                <option value="Jane Doe (Marketing Manager)">Jane Doe (Marketing Manager)</option>
+                                <option value="CEO (Direct Report)">CEO (Direct Report)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="empSalary">Basic Salary (₱)</label>
+                            <input type="number" id="empSalary" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="empHireDate">Hire Date</label>
+                            <input type="date" id="empHireDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPayGrade">Pay Grade</label>
+                            <select id="empPayGrade" required>
+                                <option value="P1">P1</option>
+                                <option value="P2">P2</option>
+                                <option value="P3">P3</option>
+                                <option value="P4">P4</option>
+                                <option value="P5">P5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="empPaymentMethod">Payment Method</label>
+                        <select id="empPaymentMethod" required>
+                            <option value="Bank Transfer - BDO">Bank Transfer - BDO</option>
+                            <option value="Bank Transfer - Metrobank">Bank Transfer - Metrobank</option>
+                            <option value="Bank Transfer - BPI">Bank Transfer - BPI</option>
+                            <option value="Bank Transfer - Security Bank">Bank Transfer - Security Bank</option>
+                            <option value="Bank Transfer - UnionBank">Bank Transfer - UnionBank</option>
+                            <option value="Cash - Office Pickup">Cash - Office Pickup</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('employeeModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveEmployee()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="leaveModalTitle">Request Leave</h2>
+                <span class="close" onclick="closeModal('leaveModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="leaveForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="leaveEmployee">Employee</label>
+                            <select id="leaveEmployee" required>
+                                <option value="John Smith">John Smith</option>
+                                <option value="Jane Doe">Jane Doe</option>
+                                <option value="Mike Johnson">Mike Johnson</option>
+                                <option value="Sarah Wilson">Sarah Wilson</option>
+                                <option value="David Brown">David Brown</option>
+                                <option value="Lisa Garcia">Lisa Garcia</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveType">Leave Type</label>
+                            <select id="leaveType" required>
+                                <option value="Vacation Leave">Vacation Leave</option>
+                                <option value="Sick Leave">Sick Leave</option>
+                                <option value="Personal Leave">Personal Leave</option>
+                                <option value="Emergency Leave">Emergency Leave</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="leaveStartDate">Start Date</label>
+                            <input type="date" id="leaveStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveEndDate">End Date</label>
+                            <input type="date" id="leaveEndDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="leaveReason">Reason for Leave</label>
+                        <textarea id="leaveReason" placeholder="Please provide a reason for your leave request..." required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('leaveModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitLeaveRequest()">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="salaryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adjust Salary</h2>
+                <span class="close" onclick="closeModal('salaryModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="salaryForm">
+                    <div class="form-group">
+                        <label for="salaryEmployee">Employee</label>
+                        <input type="text" id="salaryEmployee" readonly>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentSalary">Current Salary (₱)</label>
+                            <input type="number" id="currentSalary" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="newSalary">New Salary (₱)</label>
+                            <input type="number" id="newSalary" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaryReason">Reason for Adjustment</label>
+                        <textarea id="salaryReason" placeholder="Please provide a reason for the salary adjustment..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="effectiveDate">Effective Date</label>
+                        <input type="date" id="effectiveDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('salaryModal')">Cancel</button>
+                <button class="btn btn-warning" onclick="updateSalary()">Update Salary</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Modal and notification functions
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function saveEmployee() {
+            const form = document.getElementById('employeeForm');
+            const formData = new FormData(form);
+            
+            // Get form values
+            const empId = document.getElementById('empId').value;
+            const empName = document.getElementById('empName').value;
+            const empDepartment = document.getElementById('empDepartment').value;
+            const empPosition = document.getElementById('empPosition').value;
+            const empManager = document.getElementById('empManager').value;
+            const empSalary = document.getElementById('empSalary').value;
+            
+            if (!empName || !empDepartment || !empPosition || !empManager || !empSalary) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const table = document.querySelector('#employee-management-list');
+            const rows = table.querySelectorAll('tr');
+            let isNewEmployee = true;
+            
+            // Check if this is an existing employee
+            rows.forEach(row => {
+                if (row.cells[0].textContent === empId) {
+                    isNewEmployee = false;
+                    // Update existing row
+                    row.cells[1].textContent = empName;
+                    row.cells[2].textContent = empDepartment;
+                    row.cells[3].textContent = empPosition;
+                    row.cells[4].textContent = empManager;
+                    row.cells[5].textContent = `₱${parseInt(empSalary).toLocaleString()}`;
+                }
+            });
+            
+            // If it's a new employee, add a new row
+            if (isNewEmployee) {
+                const newRow = table.insertRow();
+                newRow.innerHTML = `
+                    <td>${empId}</td>
+                    <td>${empName}</td>
+                    <td>${empDepartment}</td>
+                    <td>${empPosition}</td>
+                    <td>${empManager}</td>
+                    <td>₱${parseInt(empSalary).toLocaleString()}</td>
+                    <td><span class="status-badge status-completed">Active</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editEmployee('${empId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
+                        <button class="btn btn-secondary" onclick="viewEmployeeDetails('${empId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                        <button class="btn btn-warning" onclick="adjustSalary('${empId}')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
+                    </td>
+                `;
+            }
+            
+            closeModal('employeeModal');
+            showNotification(`Employee ${empId} ${isNewEmployee ? 'added' : 'updated'} successfully!`, 'success');
+        }
+
+        function submitLeaveRequest() {
+            const employee = document.getElementById('leaveEmployee').value;
+            const leaveType = document.getElementById('leaveType').value;
+            const startDate = document.getElementById('leaveStartDate').value;
+            const endDate = document.getElementById('leaveEndDate').value;
+            const reason = document.getElementById('leaveReason').value;
+            
+            if (!employee || !leaveType || !startDate || !endDate || !reason) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Calculate days
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (days <= 0) {
+                showNotification('End date must be after start date', 'error');
+                return;
+            }
+            
+            // Add to leave requests table
+            const newId = 'LV-' + String(Date.now()).slice(-3);
+            const table = document.querySelector('#leave-requests-list');
+            const newRow = table.insertRow();
+            
+            newRow.innerHTML = `
+                <td>${employee}</td>
+                <td>${leaveType}</td>
+                <td>${new Date(startDate).toLocaleDateString()}</td>
+                <td>${new Date(endDate).toLocaleDateString()}</td>
+                <td>${days} days</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td>
+                    <button class="btn btn-secondary" onclick="viewLeaveDetails('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                    <button class="btn btn-primary" onclick="approveLeave('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
+                    <button class="btn btn-danger" onclick="rejectLeave('${newId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
+                </td>
+            `;
+            
+            closeModal('leaveModal');
+            showNotification(`Leave request submitted for ${employee} (${days} days)`, 'success');
+        }
+
+        function updateSalary() {
+            const employee = document.getElementById('salaryEmployee').value;
+            const currentSalary = document.getElementById('currentSalary').value;
+            const newSalary = document.getElementById('newSalary').value;
+            const reason = document.getElementById('salaryReason').value;
+            const effectiveDate = document.getElementById('effectiveDate').value;
+            
+            if (!employee || !newSalary || !reason || !effectiveDate) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (parseInt(newSalary) <= 0) {
+                showNotification('Salary must be greater than 0', 'error');
+                return;
+            }
+            
+            // Update salary in employee management table
+            const table = document.querySelector('#employee-management-list');
+            const rows = table.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                if (row.cells[1].textContent === employee) {
+                    row.cells[5].textContent = `₱${parseInt(newSalary).toLocaleString()}`;
+                }
+            });
+            
+            closeModal('salaryModal');
+            showNotification(`Salary updated for ${employee} to ₱${parseInt(newSalary).toLocaleString()}`, 'success');
+        }
+
         // Screen navigation
         function showScreen(screenId) {
             console.log('Navigating to screen:', screenId);
@@ -2038,115 +2501,198 @@
         }
 
         function editEmployee(employeeId) {
-            const employeeData = getEmployeeData(employeeId);
-            const newName = prompt(`Edit employee name:`, employeeData.name || 'John Smith');
-            const newDepartment = prompt(`Edit department:`, employeeData.department || 'Engineering');
-            const newPosition = prompt(`Edit position:`, employeeData.position || 'Senior Developer');
+            // Find the row and get current data
+            const table = document.querySelector('#employee-management-list');
+            const rows = table.querySelectorAll('tr');
+            let currentData = null;
             
-            if (newName && newDepartment && newPosition) {
-                alert(`Employee ${employeeId} information updated successfully!\n\nName: ${newName}\nDepartment: ${newDepartment}\nPosition: ${newPosition}`);
-                
-                // Update the table row
-                const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
-                if (row) {
-                    row.cells[1].textContent = newName;
-                    row.cells[2].textContent = newDepartment;
-                    row.cells[3].textContent = newPosition;
+            rows.forEach(row => {
+                if (row.cells[0].textContent === employeeId) {
+                    currentData = {
+                        id: row.cells[0].textContent,
+                        name: row.cells[1].textContent,
+                        department: row.cells[2].textContent,
+                        position: row.cells[3].textContent,
+                        manager: row.cells[4].textContent,
+                        salary: row.cells[5].textContent.replace('₱', '').replace(',', ''),
+                        status: row.cells[6].textContent.trim()
+                    };
                 }
+            });
+            
+            if (currentData) {
+                // Populate modal with current data
+                document.getElementById('modalTitle').textContent = 'Edit Employee';
+                document.getElementById('empId').value = currentData.id;
+                document.getElementById('empName').value = currentData.name;
+                document.getElementById('empDepartment').value = currentData.department;
+                document.getElementById('empPosition').value = currentData.position;
+                document.getElementById('empManager').value = currentData.manager;
+                document.getElementById('empSalary').value = currentData.salary;
+                document.getElementById('empHireDate').value = '2023-01-15'; // Default date
+                document.getElementById('empPayGrade').value = 'P3'; // Default grade
+                document.getElementById('empPaymentMethod').value = 'Bank Transfer - BDO'; // Default method
+                
+                // Show modal
+                document.getElementById('employeeModal').style.display = 'block';
             }
         }
 
         function viewEmployeeDetails(employeeId) {
-            const employeeData = getEmployeeData(employeeId);
-            const details = `
-Employee Details for ${employeeId}:
-
-👤 Personal Information:
-• Name: ${employeeData.name || 'John Smith'}
-• Department: ${employeeData.department || 'Engineering'}
-• Position: ${employeeData.position || 'Senior Developer'}
-• Hire Date: ${employeeData.hireDate || 'January 15, 2022'}
-• Pay Grade: ${employeeData.payGrade || 'P5'}
-
-💰 Compensation:
-• Basic Salary: ₱${employeeData.basicSalary?.toLocaleString() || '45,000'}
-• Payment Method: ${employeeData.paymentMethod || 'Bank Transfer - BDO'}
-
-📊 Performance:
-• Status: Active
-• Last Review: March 2024
-• Performance Rating: Excellent
-            `;
+            // Find the row and get current data
+            const table = document.querySelector('#employee-management-list');
+            const rows = table.querySelectorAll('tr');
+            let currentData = null;
             
-            alert(details);
+            rows.forEach(row => {
+                if (row.cells[0].textContent === employeeId) {
+                    currentData = {
+                        id: row.cells[0].textContent,
+                        name: row.cells[1].textContent,
+                        department: row.cells[2].textContent,
+                        position: row.cells[3].textContent,
+                        manager: row.cells[4].textContent,
+                        salary: row.cells[5].textContent,
+                        status: row.cells[6].textContent.trim()
+                    };
+                }
+            });
+            
+            if (currentData) {
+                // Create a detailed view modal
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.display = 'block';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Employee Details - ${currentData.id}</h2>
+                            <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                <div>
+                                    <h3 style="color: #3182ce; margin-bottom: 16px;">👤 Personal Information</h3>
+                                    <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                                        <p><strong>Name:</strong> ${currentData.name}</p>
+                                        <p><strong>Employee ID:</strong> ${currentData.id}</p>
+                                        <p><strong>Department:</strong> ${currentData.department}</p>
+                                        <p><strong>Position:</strong> ${currentData.position}</p>
+                                        <p><strong>Reporting Manager:</strong> ${currentData.manager}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 style="color: #38a169; margin-bottom: 16px;">💰 Compensation</h3>
+                                    <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                                        <p><strong>Basic Salary:</strong> ${currentData.salary}</p>
+                                        <p><strong>Payment Method:</strong> Bank Transfer - BDO</p>
+                                        <p><strong>Pay Grade:</strong> P5</p>
+                                        <p><strong>Hire Date:</strong> January 15, 2022</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 style="color: #ed8936; margin-bottom: 16px;">📊 Performance & Status</h3>
+                                <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+                                    <p><strong>Status:</strong> <span class="status-badge status-completed">${currentData.status}</span></p>
+                                    <p><strong>Last Review:</strong> March 2024</p>
+                                    <p><strong>Performance Rating:</strong> Excellent</p>
+                                    <p><strong>Attendance Rate:</strong> 98.5%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
         }
 
         function adjustSalary(employeeId) {
-            const currentSalary = prompt(`Enter new basic salary for ${employeeId}:`, '45000');
-            if (currentSalary && !isNaN(currentSalary)) {
-                const newSalary = parseFloat(currentSalary);
-                if (confirm(`Are you sure you want to update the salary to ₱${newSalary.toLocaleString()}?`)) {
-                    alert(`Salary updated successfully for ${employeeId}!\nNew Basic Salary: ₱${newSalary.toLocaleString()}`);
-                    
-                    // Update the table row
-                    const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
-                    if (row) {
-                        row.cells[4].textContent = `₱${newSalary.toLocaleString()}.00`;
-                    }
+            // Find the row and get current data
+            const table = document.querySelector('#employee-management-list');
+            const rows = table.querySelectorAll('tr');
+            let currentData = null;
+            
+            rows.forEach(row => {
+                if (row.cells[0].textContent === employeeId) {
+                    currentData = {
+                        id: row.cells[0].textContent,
+                        name: row.cells[1].textContent,
+                        salary: row.cells[5].textContent.replace('₱', '').replace(',', '')
+                    };
                 }
+            });
+            
+            if (currentData) {
+                // Populate salary modal
+                document.getElementById('salaryEmployee').value = currentData.name;
+                document.getElementById('currentSalary').value = currentData.salary;
+                document.getElementById('newSalary').value = '';
+                document.getElementById('salaryReason').value = '';
+                document.getElementById('effectiveDate').value = new Date().toISOString().split('T')[0];
+                
+                // Show modal
+                document.getElementById('salaryModal').style.display = 'block';
             }
         }
 
         function addNewEmployee() {
-            const name = prompt('Enter employee name:');
-            const department = prompt('Enter department:');
-            const position = prompt('Enter position:');
-            const salary = prompt('Enter basic salary:');
+            // Clear form and show modal for new employee
+            document.getElementById('modalTitle').textContent = 'Add New Employee';
+            document.getElementById('empId').value = 'EMP-' + String(Date.now()).slice(-3);
+            document.getElementById('empName').value = '';
+            document.getElementById('empDepartment').value = 'Engineering';
+            document.getElementById('empPosition').value = '';
+            document.getElementById('empManager').value = 'Sarah Wilson (HR Manager)';
+            document.getElementById('empSalary').value = '';
+            document.getElementById('empHireDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('empPayGrade').value = 'P3';
+            document.getElementById('empPaymentMethod').value = 'Bank Transfer - BDO';
             
-            if (name && department && position && salary) {
-                const newId = 'EMP-' + String(Date.now()).slice(-3);
-                const table = document.querySelector('#employee-management-list');
-                const newRow = table.insertRow();
-                
-                newRow.innerHTML = `
-                    <td>${newId}</td>
-                    <td>${name}</td>
-                    <td>${department}</td>
-                    <td>${position}</td>
-                    <td>₱${parseFloat(salary).toLocaleString()}.00</td>
-                    <td><span class="status-badge status-completed">Active</span></td>
-                    <td>
-                        <button class="btn btn-primary" onclick="editEmployee('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✏️ Edit</button>
-                        <button class="btn btn-secondary" onclick="viewEmployeeDetails('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
-                        <button class="btn btn-warning" onclick="adjustSalary('${newId}')" style="padding: 6px 12px; font-size: 12px;">💰 Salary</button>
-                    </td>
-                `;
-                
-                alert(`New employee added successfully!\nEmployee ID: ${newId}\nName: ${name}`);
-            }
+            // Show modal
+            document.getElementById('employeeModal').style.display = 'block';
         }
 
         // Reports & Analytics Functions
         function generatePayrollReport() {
-            alert('📊 Payroll Report Generated!\n\nReport includes:\n• Total payroll costs\n• Department breakdown\n• Tax contributions\n• Employee statistics\n\nReport has been saved to your downloads folder.');
+            showNotification('📊 Payroll report generated successfully! Report saved to downloads folder.', 'success');
+            
+            // Simulate report generation by updating the dashboard stats
+            setTimeout(() => {
+                const totalCostElement = document.querySelector('#reports .dashboard-card:nth-child(1) p');
+                if (totalCostElement) {
+                    const currentCost = totalCostElement.textContent;
+                    const newCost = '₱2,467,250.00';
+                    totalCostElement.textContent = newCost;
+                    showNotification('📈 Payroll costs updated in report', 'success');
+                }
+            }, 1000);
         }
 
         function exportPayrollData() {
-            alert('📥 Exporting Payroll Data to Excel...\n\nExport includes:\n• Employee information\n• Salary details\n• Payroll history\n• Tax calculations\n\nFile will be downloaded as "payroll_data_export.xlsx"');
+            showNotification('📥 Exporting payroll data to Excel...', 'success');
+            
+            // Simulate export progress
+            setTimeout(() => {
+                showNotification('✅ Export completed! File: payroll_data_export.xlsx', 'success');
+            }, 2000);
         }
 
         function scheduleReport() {
             const frequency = prompt('Select report frequency:\n1. Weekly\n2. Monthly\n3. Quarterly\n\nEnter number (1-3):');
             if (frequency) {
                 const frequencies = ['Weekly', 'Monthly', 'Quarterly'];
-                alert(`📅 Report scheduled for ${frequencies[frequency-1]} delivery!\n\nYou will receive automated payroll reports via email.`);
+                showNotification(`📅 Report scheduled for ${frequencies[frequency-1]} delivery!`, 'success');
             }
         }
 
         // Leave Calendar Functions
         function updateLeaveCalendar() {
             const selectedMonth = document.getElementById('leave-month').value;
-            alert(`📅 Calendar updated for ${selectedMonth}!\n\nLeave calendar will show all approved and pending leave requests for the selected month.`);
+            showNotification(`📅 Calendar updated for ${selectedMonth}!`, 'success');
         }
 
         function filterLeaveRequests() {
@@ -2176,38 +2722,15 @@ Employee Details for ${employeeId}:
         }
 
         function requestLeave() {
-            const employee = prompt('Employee requesting leave:');
-            const leaveType = prompt('Leave type (Vacation/Sick/Personal):');
-            const startDate = prompt('Start date (MM/DD/YYYY):');
-            const endDate = prompt('End date (MM/DD/YYYY):');
-            const reason = prompt('Reason for leave:');
+            // Clear form and show modal
+            document.getElementById('leaveEmployee').value = 'John Smith';
+            document.getElementById('leaveType').value = 'Vacation Leave';
+            document.getElementById('leaveStartDate').value = '';
+            document.getElementById('leaveEndDate').value = '';
+            document.getElementById('leaveReason').value = '';
             
-            if (employee && leaveType && startDate && endDate && reason) {
-                const newId = 'LV-' + String(Date.now()).slice(-3);
-                const table = document.querySelector('#leave-requests-list');
-                const newRow = table.insertRow();
-                
-                // Calculate days
-                const start = new Date(startDate);
-                const end = new Date(endDate);
-                const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-                
-                newRow.innerHTML = `
-                    <td>${employee}</td>
-                    <td>${leaveType} Leave</td>
-                    <td>${startDate}</td>
-                    <td>${endDate}</td>
-                    <td>${days} days</td>
-                    <td><span class="status-badge status-pending">Pending</span></td>
-                    <td>
-                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
-                        <button class="btn btn-primary" onclick="approveLeave('${newId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
-                        <button class="btn btn-danger" onclick="rejectLeave('${newId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
-                    </td>
-                `;
-                
-                alert(`✅ Leave request submitted!\n\nRequest ID: ${newId}\nEmployee: ${employee}\nLeave Type: ${leaveType}\nDuration: ${days} days\n\nRequest is now pending approval.`);
-            }
+            // Show modal
+            document.getElementById('leaveModal').style.display = 'block';
         }
 
         function viewLeaveDetails(leaveId) {
@@ -2241,63 +2764,94 @@ Leave Request Details (${leaveId}):
         }
 
         function approveLeave(leaveId) {
-            if (confirm(`Are you sure you want to approve leave request ${leaveId}?`)) {
-                alert(`✅ Leave request ${leaveId} approved!\n\nThe employee has been notified and the leave has been added to the calendar.`);
-                
-                // Update the status in the table
-                const row = document.querySelector(`tr:has(td:contains("${leaveId}"))`);
-                if (row) {
-                    const statusCell = row.cells[5];
-                    statusCell.innerHTML = '<span class="status-badge status-completed">Approved</span>';
-                    
-                    // Update action buttons
-                    const actionCell = row.cells[6];
-                    actionCell.innerHTML = `
-                        <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
-                        <button class="btn btn-success" onclick="approveLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">✅ Approved</button>
-                    `;
+            // Find the row by looking for the leave ID in the action buttons
+            const table = document.querySelector('#leave-requests-list');
+            const rows = table.querySelectorAll('tr');
+            let targetRow = null;
+            
+            rows.forEach(row => {
+                const actionCell = row.cells[6];
+                if (actionCell.innerHTML.includes(leaveId)) {
+                    targetRow = row;
                 }
+            });
+            
+            if (targetRow) {
+                // Update status
+                const statusCell = targetRow.cells[5];
+                statusCell.innerHTML = '<span class="status-badge status-completed">Approved</span>';
+                
+                // Update action buttons
+                const actionCell = targetRow.cells[6];
+                actionCell.innerHTML = `
+                    <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
+                    <button class="btn btn-success" onclick="approveLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">✅ Approved</button>
+                `;
+                
+                showNotification(`Leave request ${leaveId} approved! Employee has been notified.`, 'success');
             }
         }
 
         function rejectLeave(leaveId) {
             const reason = prompt(`Please provide a reason for rejecting leave request ${leaveId}:`);
             if (reason) {
-                alert(`❌ Leave request ${leaveId} rejected!\n\nReason: ${reason}\n\nThe employee has been notified of the rejection.`);
+                // Find the row by looking for the leave ID in the action buttons
+                const table = document.querySelector('#leave-requests-list');
+                const rows = table.querySelectorAll('tr');
+                let targetRow = null;
                 
-                // Update the status in the table
-                const row = document.querySelector(`tr:has(td:contains("${leaveId}"))`);
-                if (row) {
-                    const statusCell = row.cells[5];
+                rows.forEach(row => {
+                    const actionCell = row.cells[6];
+                    if (actionCell.innerHTML.includes(leaveId)) {
+                        targetRow = row;
+                    }
+                });
+                
+                if (targetRow) {
+                    // Update status
+                    const statusCell = targetRow.cells[5];
                     statusCell.innerHTML = '<span class="status-badge status-error">Rejected</span>';
                     
                     // Update action buttons
-                    const actionCell = row.cells[6];
+                    const actionCell = targetRow.cells[6];
                     actionCell.innerHTML = `
                         <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
                         <button class="btn btn-warning" onclick="reconsiderLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">🔄 Reconsider</button>
                     `;
+                    
+                    showNotification(`Leave request ${leaveId} rejected. Reason: ${reason}`, 'error');
                 }
             }
         }
 
         function reconsiderLeave(leaveId) {
             if (confirm(`Are you sure you want to reconsider leave request ${leaveId}? This will change its status back to pending.`)) {
-                alert(`🔄 Leave request ${leaveId} is now under reconsideration!\n\nThe request has been moved back to pending status for review.`);
+                // Find the row by looking for the leave ID in the action buttons
+                const table = document.querySelector('#leave-requests-list');
+                const rows = table.querySelectorAll('tr');
+                let targetRow = null;
                 
-                // Update the status in the table
-                const row = document.querySelector(`tr:has(td:contains("${leaveId}"))`);
-                if (row) {
-                    const statusCell = row.cells[5];
+                rows.forEach(row => {
+                    const actionCell = row.cells[6];
+                    if (actionCell.innerHTML.includes(leaveId)) {
+                        targetRow = row;
+                    }
+                });
+                
+                if (targetRow) {
+                    // Update status
+                    const statusCell = targetRow.cells[5];
                     statusCell.innerHTML = '<span class="status-badge status-pending">Pending</span>';
                     
                     // Update action buttons
-                    const actionCell = row.cells[6];
+                    const actionCell = targetRow.cells[6];
                     actionCell.innerHTML = `
                         <button class="btn btn-secondary" onclick="viewLeaveDetails('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">👁️ View</button>
                         <button class="btn btn-primary" onclick="approveLeave('${leaveId}')" style="margin-right: 8px; padding: 6px 12px; font-size: 12px;">✅ Approve</button>
                         <button class="btn btn-danger" onclick="rejectLeave('${leaveId}')" style="padding: 6px 12px; font-size: 12px;">❌ Reject</button>
                     `;
+                    
+                    showNotification(`Leave request ${leaveId} is now under reconsideration!`, 'warning');
                 }
             }
         }
@@ -2332,15 +2886,31 @@ Leave Request Details (${leaveId}):
         }
 
         function downloadPayslip() {
-            alert('Downloading payslip as PDF... (This is a prototype - in a real app, this would generate a PDF)');
+            showNotification('📥 Downloading payslip as PDF...', 'success');
+            setTimeout(() => {
+                showNotification('✅ Payslip downloaded! File: payslip_EMP-001_March2024.pdf', 'success');
+            }, 1500);
         }
 
         function emailPayslip() {
             const employeeName = document.querySelector('#employee-payslip .payslip-header p').textContent.split('(')[0].split(':')[1].trim();
             const email = prompt('Enter employee email address:', `${employeeName.toLowerCase().replace(' ', '.')}@company.com`);
             if (email) {
-                alert(`Payslip sent to ${email} successfully!`);
+                showNotification('📧 Sending payslip via email...', 'success');
+                setTimeout(() => {
+                    showNotification(`✅ Payslip sent to ${email} successfully!`, 'success');
+                }, 2000);
             }
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         }
 
         // Initialize the app
