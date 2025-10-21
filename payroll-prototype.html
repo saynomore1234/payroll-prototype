@@ -2946,21 +2946,49 @@
         }
 
         function executeFixError(employeeId, employeeName) {
+            console.log(`Starting to fix error for ${employeeId} (${employeeName})`);
+            
             // Simulate fixing the error
             showNotification(`Error fixed for ${employeeName}! The payslip has been recalculated and is now ready for processing.`, 'success');
             
-            // Update the status in the table
-            const row = document.querySelector(`tr:has(td:contains("${employeeId}"))`);
-            if (row) {
-                const statusCell = row.querySelector('.status-badge');
-                statusCell.textContent = 'Complete';
-                statusCell.className = 'status-badge status-completed';
-                
-                // Remove the fix button
-                const fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
-                if (fixButton) {
-                    fixButton.remove();
+            // Update the status in the table - find row by employee ID
+            const table = document.querySelector('#employee-list tbody');
+            if (!table) {
+                console.error('Employee list table not found');
+                return;
+            }
+            
+            const rows = table.querySelectorAll('tr');
+            console.log(`Found ${rows.length} rows in employee list`);
+            
+            let found = false;
+            rows.forEach((row, index) => {
+                const employeeIdCell = row.querySelector('td:first-child');
+                if (employeeIdCell && employeeIdCell.textContent.trim() === employeeId) {
+                    console.log(`Found matching row for ${employeeId} at index ${index}`);
+                    found = true;
+                    
+                    // Update status badge
+                    const statusCell = row.querySelector('.status-badge');
+                    if (statusCell) {
+                        statusCell.textContent = 'Complete';
+                        statusCell.className = 'status-badge status-completed';
+                        console.log('Updated status badge to Complete');
+                    }
+                    
+                    // Remove the fix button
+                    const fixButton = row.querySelector('button[onclick*="fixEmployeeError"]');
+                    if (fixButton) {
+                        fixButton.remove();
+                        console.log('Successfully removed fix button');
+                    } else {
+                        console.log('Fix button not found in row');
+                    }
                 }
+            });
+            
+            if (!found) {
+                console.error(`Could not find row for employee ${employeeId}`);
             }
         }
 
