@@ -2546,9 +2546,10 @@
                 </div>
             `;
             
-            // Create new payslip details section
+            // Create new payslip details section with proper layout
             const payslipDetails = document.createElement('div');
             payslipDetails.className = 'payslip-details';
+            payslipDetails.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr; gap: 30px;';
             payslipDetails.innerHTML = `
                 <div>
                     <h3>Employee Information</h3>
@@ -2572,6 +2573,10 @@
                         <p><strong>Overtime Hours:</strong> ${employeeData.overtimeHours} hours</p>
                     </div>
                 </div>
+                
+                <div class="salary-breakdown">
+                    <!-- Salary breakdown will be populated by updateSalaryBreakdown function -->
+                </div>
             `;
             
             // Insert the new payslip details after the header
@@ -2579,6 +2584,53 @@
             
             // Update salary breakdown
             updateSalaryBreakdown(employeeData);
+            
+            // Add Payment Information and Year-to-Date Summary after the payslip details
+            const additionalInfo = document.createElement('div');
+            additionalInfo.className = 'additional-info-section';
+            additionalInfo.style.cssText = 'margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;';
+            additionalInfo.innerHTML = `
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
+                    <h3>Payment Information</h3>
+                    <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
+                    <p><strong>Bank:</strong> ${employeeData.bankDetails.bank}</p>
+                    <p><strong>Account:</strong> ${employeeData.bankDetails.account}</p>
+                    <p><strong>Branch Code:</strong> ${employeeData.bankDetails.branchCode}</p>
+                    <p><strong>Deposit Date:</strong> April 5, 2024</p>
+                    <p><strong>Reference No:</strong> ${employeeData.bankDetails.referenceNo}</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
+                    <h3>Year-to-Date Summary</h3>
+                    <div class="salary-item">
+                        <span>Gross Pay YTD:</span>
+                        <span>₱94,093.74</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>SSS Contributions YTD:</span>
+                        <span>₱3,375.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>PhilHealth YTD:</span>
+                        <span>₱1,200.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Pag-IBIG YTD:</span>
+                        <span>₱300.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Withholding Tax YTD:</span>
+                        <span>₱7,500.00</span>
+                    </div>
+                    <div class="salary-item">
+                        <span>Net Pay YTD:</span>
+                        <span>₱76,618.74</span>
+                    </div>
+                </div>
+            `;
+            
+            // Insert additional info after the payslip details
+            payslipDetails.parentNode.insertBefore(additionalInfo, payslipDetails.nextSibling);
             
             // Show the individual payslip screen
             showScreen('employee-payslip');
@@ -2852,62 +2904,6 @@
                 </div>
 
             `;
-            
-            // Remove any existing Payment Information and Year-to-Date sections to avoid duplicates
-            const existingPaymentInfo = document.querySelector('#employee-payslip .payment-info-section');
-            const existingYTD = document.querySelector('#employee-payslip .ytd-section');
-            const existingAdditionalInfo = document.querySelector('#employee-payslip .additional-info-section');
-            
-            if (existingPaymentInfo) existingPaymentInfo.remove();
-            if (existingYTD) existingYTD.remove();
-            if (existingAdditionalInfo) existingAdditionalInfo.remove();
-            
-            // Add Payment Information and Year-to-Date Summary side by side
-            const additionalInfo = document.createElement('div');
-            additionalInfo.className = 'additional-info-section';
-            additionalInfo.style.cssText = 'margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;';
-            additionalInfo.innerHTML = `
-                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
-                    <h3>Payment Information</h3>
-                    <p><strong>Payment Method:</strong> ${employeeData.paymentMethod}</p>
-                    <p><strong>Bank:</strong> ${employeeData.bankDetails.bank}</p>
-                    <p><strong>Account:</strong> ${employeeData.bankDetails.account}</p>
-                    <p><strong>Branch Code:</strong> ${employeeData.bankDetails.branchCode}</p>
-                    <p><strong>Deposit Date:</strong> April 5, 2024</p>
-                    <p><strong>Reference No:</strong> ${employeeData.bankDetails.referenceNo}</p>
-                </div>
-                
-                <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); padding: 20px; border-radius: 8px;">
-                    <h3>Year-to-Date Summary</h3>
-                    <div class="salary-item">
-                        <span>Gross Pay YTD:</span>
-                        <span>₱94,093.74</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>SSS Contributions YTD:</span>
-                        <span>₱3,375.00</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>PhilHealth YTD:</span>
-                        <span>₱1,200.00</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>Pag-IBIG YTD:</span>
-                        <span>₱300.00</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>Withholding Tax YTD:</span>
-                        <span>₱7,500.00</span>
-                    </div>
-                    <div class="salary-item">
-                        <span>Net Pay YTD:</span>
-                        <span>₱76,618.74</span>
-                    </div>
-                </div>
-            `;
-            
-            // Insert additional info after the salary breakdown
-            salaryBreakdown.parentNode.insertBefore(additionalInfo, salaryBreakdown.nextSibling);
         }
 
         // Fix employee error function
