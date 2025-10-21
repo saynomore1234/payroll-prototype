@@ -667,6 +667,7 @@
                         <a href="#" onclick="showForgotPasswordModal(); return false;" style="color: #3182ce; text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s ease;" onmouseover="this.style.color='#2c5282'" onmouseout="this.style.color='#3182ce'">Forgot Password?</a>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 36px; padding: 18px; font-size: 17px; font-weight: 700; background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%); border: none; border-radius: 12px; color: white; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(49, 130, 206, 0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(49, 130, 206, 0.4)'">Sign In to MotoPH</button>
+                    <button type="button" onclick="testLogin()" style="width: 100%; margin-top: 12px; padding: 12px; font-size: 14px; font-weight: 600; background: #38a169; border: none; border-radius: 8px; color: white; cursor: pointer;">Test Login (Debug)</button>
                 </form>
             </div>
         </div>
@@ -2052,31 +2053,41 @@
         function showScreen(screenId) {
             console.log('Navigating to screen:', screenId);
             
-            // Hide all screens
-            const screens = document.querySelectorAll('.screen');
-            console.log('Found', screens.length, 'screens');
-            screens.forEach(screen => {
-                screen.classList.remove('active');
-                screen.style.display = 'none';
-            });
-            
-            // Show selected screen
-            const targetScreen = document.getElementById(screenId);
-            if (targetScreen) {
-                targetScreen.classList.add('active');
-                targetScreen.style.display = 'block';
-                console.log('Successfully showed screen:', screenId);
-            } else {
-                console.error('Screen not found:', screenId);
-                showNotification('Screen not found: ' + screenId, 'error');
-            }
-            
-            // Show/hide logout button based on current screen
-            const headerButtons = document.getElementById('header-buttons');
-            if (screenId === 'login') {
-                headerButtons.style.display = 'none';
-            } else {
-                headerButtons.style.display = 'flex';
+            try {
+                // Hide all screens
+                const screens = document.querySelectorAll('.screen');
+                console.log('Found', screens.length, 'screens');
+                screens.forEach(screen => {
+                    screen.classList.remove('active');
+                    screen.style.display = 'none';
+                });
+                
+                // Show selected screen
+                const targetScreen = document.getElementById(screenId);
+                if (targetScreen) {
+                    targetScreen.classList.add('active');
+                    targetScreen.style.display = 'block';
+                    console.log('Successfully showed screen:', screenId);
+                    
+                    // Force a reflow to ensure the display change takes effect
+                    targetScreen.offsetHeight;
+                } else {
+                    console.error('Screen not found:', screenId);
+                    showNotification('Screen not found: ' + screenId, 'error');
+                }
+                
+                // Show/hide logout button based on current screen
+                const headerButtons = document.getElementById('header-buttons');
+                if (headerButtons) {
+                    if (screenId === 'login') {
+                        headerButtons.style.display = 'none';
+                    } else {
+                        headerButtons.style.display = 'flex';
+                    }
+                }
+            } catch (error) {
+                console.error('Error in showScreen:', error);
+                showNotification('Error navigating to screen: ' + error.message, 'error');
             }
         }
 
@@ -2084,32 +2095,44 @@
         function handleLogin(event) {
             console.log('handleLogin called');
             event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
             
-            console.log('Email:', email, 'Password:', password);
-            
-            // Simple validation (in real app, this would be server-side)
-            if (email && password) {
-                console.log('Validation passed, showing loading state');
-                // Show loading state
-                const submitBtn = event.target.querySelector('button[type="submit"]');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Signing In...';
-                submitBtn.disabled = true;
+            try {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
                 
-                // Simulate login process
-                setTimeout(() => {
-                    console.log('Attempting to show dashboard');
-                    showScreen('dashboard');
-                    showNotification('Welcome to MotoPH Payroll Management System!', 'success');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }, 1000);
-            } else {
-                console.log('Validation failed');
-                showNotification('Please enter both email and password', 'error');
+                console.log('Email:', email, 'Password:', password);
+                
+                // Simple validation (in real app, this would be server-side)
+                if (email && password) {
+                    console.log('Validation passed, showing loading state');
+                    // Show loading state
+                    const submitBtn = event.target.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Signing In...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate login process
+                    setTimeout(() => {
+                        console.log('Attempting to show dashboard');
+                        showScreen('dashboard');
+                        showNotification('Welcome to MotoPH Payroll Management System!', 'success');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }, 1000);
+                } else {
+                    console.log('Validation failed');
+                    showNotification('Please enter both email and password', 'error');
+                }
+            } catch (error) {
+                console.error('Error in handleLogin:', error);
+                showNotification('An error occurred during login. Please try again.', 'error');
             }
+        }
+
+        // Test function to check if showScreen works
+        function testLogin() {
+            console.log('testLogin called');
+            showScreen('dashboard');
         }
 
         // Logout handling
