@@ -371,13 +371,17 @@
 
         .modal-content {
             background-color: white;
-            margin: 5% auto;
+            margin: 2% auto;
             padding: 0;
             border-radius: 16px;
             width: 90%;
             max-width: 600px;
+            max-height: 90vh;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             animation: modalSlideIn 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         @keyframes modalSlideIn {
@@ -414,6 +418,28 @@
 
         .modal-body {
             padding: 24px 32px;
+            overflow-y: auto;
+            flex: 1;
+            max-height: calc(90vh - 120px);
+        }
+
+        /* Custom scrollbar for modal body */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
 
         .modal-footer {
@@ -422,6 +448,7 @@
             display: flex;
             justify-content: flex-end;
             gap: 12px;
+            flex-shrink: 0;
         }
 
         .form-row {
@@ -988,7 +1015,6 @@
                 <p><strong>Department:</strong> Engineering</p>
                 <div style="margin-top: 15px;">
                     <button class="btn btn-warning" onclick="editPayslip()">✏️ Edit Payslip</button>
-                    <button class="btn btn-info" onclick="testEditModal()" style="margin-left: 10px;">🧪 Test Modal</button>
                     <button class="btn btn-primary" onclick="printPayslip()">🖨️ Print Payslip</button>
                     <button class="btn btn-success" onclick="downloadPayslip()">📥 Download PDF</button>
                     <button class="btn btn-secondary" onclick="emailPayslip()">📧 Email Payslip</button>
@@ -3375,28 +3401,6 @@ Leave Request Details (${leaveId}):
                 console.error('Error in editPayslip:', error);
                 showNotification('Error opening edit form: ' + error.message, 'error');
             }
-        }
-
-        // Test function to check if modal works
-        function testEditModal() {
-            console.log('Testing edit modal...');
-            document.getElementById('editEmployeeName').value = 'Test Employee (EMP-TEST)';
-            document.getElementById('editBasicSalary').value = 25000;
-            document.getElementById('editOvertimeHours').value = 5;
-            document.getElementById('editPerformanceBonus').value = 2500;
-            document.getElementById('editProjectIncentive').value = 1000;
-            document.getElementById('editThirteenthMonth').value = 2083.33;
-            document.getElementById('editSSS').value = 1125;
-            document.getElementById('editPhilHealth').value = 843.75;
-            document.getElementById('editPagIBIG').value = 562.50;
-            document.getElementById('editWithholdingTax').value = 3750;
-            document.getElementById('editHealthInsurance').value = 1000;
-            document.getElementById('editLifeInsurance').value = 400;
-            document.getElementById('editLoanDeduction').value = 0;
-            document.getElementById('editReason').value = 'Test edit';
-            
-            document.getElementById('editPayslipModal').style.display = 'block';
-            console.log('Modal should be visible now');
         }
 
         function savePayslipEdit() {
